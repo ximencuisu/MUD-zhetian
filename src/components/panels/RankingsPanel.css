@@ -1,0 +1,158 @@
+/* Rankings Panel Styles */
+.rankings-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* Tabs */
+.rankings-tabs {
+  display: flex;
+  gap: 2px;
+  background: rgba(60, 40, 20, 0.3);
+  border-radius: 6px;
+  padding: 3px;
+}
+
+.rankings-tab {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 6px 4px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background: transparent;
+  color: #887755;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.rankings-tab:hover {
+  background: rgba(100, 70, 40, 0.3);
+  color: #ccaa66;
+}
+
+.rankings-tab.active {
+  background: linear-gradient(135deg, rgba(80, 50, 20, 0.6), rgba(60, 40, 20, 0.4));
+  border-color: #8b7355;
+  color: #ffd700;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+
+.rankings-tab-icon {
+  font-size: 14px;
+}
+
+/* Search */
+.rankings-search {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(30, 20, 10, 0.5);
+  border: 1px solid #4a3a2a;
+  border-radius: 6px;
+  padding: 4px 8px;
+}
+
+.rankings-search:hover {
+  border-color: #6b5a4a;
+}
+
+.rankings-search-icon {
+  font-size: 12px;
+  opacity: 0.6;
+}
+
+.rankings-search-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #ddccaa;
+  font-size: 12px;
+  font-family: inherit;
+}
+
+.rankings-search-input::placeholder {
+  color: #554433;
+}
+
+.rankings-search-clear {
+  cursor: pointer;
+  font-size: 12px;
+  opacity: 0.5;
+  padding: 2px;
+}
+
+.rankings-search-clear:hover {
+  opacity: 1;
+  color: #ff6644;
+}
+
+/* My rank indicator */
+.rankings-myrank {
+  font-size: 11px;
+  color: #ccaa66;
+  padding: 4px 8px;
+  background: rgba(60, 40, 20, 0.3);
+  border-radius: 4px;
+  text-align: center;
+}
+
+/* Rank list */
+.rankings-panel .rank-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 8px;
+  border-radius: 4px;
+  transition: background 0.2s;
+  cursor: default;
+}
+
+.rankings-panel .rank-row:hover {
+  background: rgba(80, 60, 30, 0.2);
+}
+
+.rankings-panel .rank-row.me {
+  background: rgba(100, 80, 40, 0.15);
+  border-left: 2px solid #ffd700;
+}
+
+.rank-num.top3 {
+  font-weight: bold;
+}
+
+.rank-name {
+  color: #ddccaa;
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rankings-panel .rank-row.me .rank-name {
+  color: #ffd700;
+}
+
+/* Empty state */
+.rankings-empty {
+  text-align: center;
+  padding: 20px 8px;
+  color: #554422;
+  font-size: 12px;
+}
+
+/* Footer */
+.rankings-footer {
+  text-align: center;
+  font-size: 10px;
+  color: #554422;
+  padding: 4px;
+  border-top: 1px solid rgba(60, 40, 20, 0.3);
+  margin-top: 4px;
+}

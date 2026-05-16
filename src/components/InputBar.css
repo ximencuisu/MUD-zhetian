@@ -1,0 +1,134 @@
+.input-bar {
+  padding: 6px;
+  background: rgba(3,12,5,0.95);
+  border-top: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.ib-command-form {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 5px;
+}
+
+.ib-command-prompt {
+  color: var(--green);
+  font-family: monospace;
+  font-size: 15px;
+  line-height: 1;
+  text-shadow: 0 0 8px rgba(0,255,65,0.4);
+}
+
+.ib-command-input {
+  flex: 1;
+  min-width: 0;
+  height: 28px;
+  background: #010802;
+  border: 1px solid rgba(40,80,40,0.55);
+  color: var(--text);
+  font-family: var(--font-cn);
+  font-size: 13px;
+  padding: 0 10px;
+  outline: none;
+}
+
+.ib-command-input::placeholder {
+  color: #1e4a24;
+}
+
+.ib-command-input:focus {
+  border-color: var(--green-dim);
+  box-shadow: inset 0 0 12px rgba(0,255,65,0.05);
+}
+
+.ib-command-run,
+.ib-quick-btn {
+  height: 28px;
+  background: #051407;
+  border: 1px solid rgba(40,100,45,0.65);
+  color: var(--text-dim);
+  font-family: var(--font-cn);
+  font-size: 12px;
+  padding: 0 12px;
+  cursor: pointer;
+  transition: all 0.12s;
+  white-space: nowrap;
+}
+
+.ib-command-run:hover,
+.ib-quick-btn:hover {
+  color: var(--green);
+  border-color: var(--green-dim);
+  background: #071c0b;
+}
+
+.ib-quick-row {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 4px;
+  overflow-x: auto;
+  margin-bottom: 5px;
+}
+
+.ib-quick-btn {
+  height: 24px;
+  padding: 0 10px;
+  font-size: 11px;
+  flex-shrink: 0;
+}
+
+.ib-quick-btn.danger {
+  color: #ff8866;
+  border-color: rgba(180,50,20,0.65);
+  background: rgba(80,15,5,0.35);
+}
+
+.ib-quick-btn.danger:hover {
+  color: #ffcc99;
+  border-color: #ff6644;
+}
+
+.ib-window-row {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 2px;
+  overflow-x: auto;
+  justify-content: center;
+}
+
+.ib-win-btn {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  background: transparent;
+  border: 1px solid rgba(40,80,40,0.3);
+  border-radius: 2px;
+  color: var(--text-dim);
+  font-family: var(--font-cn);
+  font-size: 10px;
+  padding: 2px 6px;
+  cursor: pointer;
+  transition: all 0.1s;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.ib-win-btn:hover {
+  border-color: var(--border-bright);
+  color: var(--green);
+}
+
+.ib-win-btn.active {
+  border-color: var(--green);
+  color: var(--green);
+  background: rgba(0,255,65,0.06);
+}
+
+.ib-win-icon {
+  font-size: 12px;
+}
+
+.ib-win-label {
+  font-size: 9px;
+}

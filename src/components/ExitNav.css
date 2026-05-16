@@ -1,0 +1,229 @@
+.exit-nav {
+  padding: 6px 8px;
+  background: rgba(0, 0, 0, 0.95);
+  border: 1px solid #333333;
+  border-radius: 2px;
+  margin-bottom: 2px;
+  flex-shrink: 0;
+  font-family: var(--font-cn);
+  color: #ffffff;
+}
+
+/* Cross-shaped exit navigation */
+.en-exits-cross {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  margin: 10px 0;
+}
+
+.en-exits-row {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.en-cross-line-v {
+  width: 2px;
+  height: 10px;
+  background: #555555;
+}
+
+.en-cross-line-h {
+  width: 10px;
+  height: 2px;
+  background: #555555;
+}
+
+.en-cross-center {
+  padding: 4px 12px;
+  background: rgba(255, 204, 68, 0.15);
+  border: 1px solid #ffcc44;
+  border-radius: 2px;
+  min-width: 60px;
+  text-align: center;
+}
+
+.en-cross-label {
+  color: #ffcc44;
+  font-size: 10px;
+  font-weight: bold;
+}
+
+.en-exit-cross {
+  padding: 4px 10px;
+  background: rgba(30, 30, 30, 0.8);
+  border: 1px solid #555555;
+  border-radius: 2px;
+  color: #cccccc;
+  font-size: 11px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.15s;
+  min-width: 80px;
+}
+.en-exit-cross:hover {
+  background: rgba(50, 50, 50, 0.9);
+  border-color: #ffcc44;
+  color: #ffcc44;
+}
+.en-exit-cross.en-current {
+  background: rgba(255, 204, 68, 0.2);
+  border-color: #ffcc44;
+  color: #ffcc44;
+  box-shadow: 0 0 8px rgba(255, 204, 68, 0.3);
+}
+
+/* Room description */
+.en-desc {
+  color: #00ff00;
+  font-size: 12px;
+  line-height: 1.6;
+  margin-bottom: 8px;
+  max-height: 60px;
+  overflow: hidden;
+  padding: 0 2px;
+}
+
+/* Entity list */
+.en-entity-list {
+  margin-bottom: 8px;
+}
+
+.en-entity-row {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding: 2px 0;
+  font-size: 12px;
+}
+
+.en-entity-name {
+  flex: 0 0 auto;
+  text-align: center;
+}
+
+.en-player-hp {
+  flex: 0 0 auto;
+  margin-left: 0 !important;
+}
+
+.en-hp-bar-container {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: 15px;
+}
+
+.en-hp-bar {
+  width: 60px;
+  height: 6px;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid #555555;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.en-hp-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #cc2200, #ff4444);
+  border-radius: 2px;
+  transition: width 0.3s;
+}
+
+/* Player: red color like screenshot */
+.en-player {
+  color: #ff0000;
+  font-weight: bold;
+}
+.en-player-hp {
+  color: #00ff00;
+}
+
+/* Monsters: different colors by tier */
+.en-monster-boss {
+  color: #ffaa00;
+  cursor: pointer;
+}
+.en-monster-boss:hover {
+  color: #ffcc44;
+}
+
+.en-monster-elite {
+  color: #ffdd44;
+  cursor: pointer;
+}
+.en-monster-elite:hover {
+  color: #ffee88;
+}
+
+.en-monster-normal {
+  color: #44cc44;
+  cursor: pointer;
+}
+.en-monster-normal:hover {
+  color: #66ff66;
+}
+
+/* Action buttons row */
+.en-actions {
+  display: flex;
+  gap: 6px;
+  margin: 4px 0 6px 16px;
+}
+
+.en-action-btn {
+  padding: 2px 10px;
+  background: rgba(30, 30, 30, 0.8);
+  border: 1px solid #555555;
+  border-radius: 2px;
+  color: #cccccc;
+  font-size: 11px;
+  font-family: var(--font-cn);
+  cursor: pointer;
+  transition: all 0.12s;
+}
+.en-action-btn:hover {
+  background: rgba(50, 50, 50, 0.9);
+  border-color: #ffcc44;
+  color: #ffcc44;
+}
+
+/* Leave button top right */
+.en-leave-btn {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  padding: 2px 8px;
+  background: rgba(30, 30, 30, 0.8);
+  border: 1px solid #555555;
+  border-radius: 2px;
+  color: #cccccc;
+  font-size: 10px;
+  font-family: var(--font-cn);
+  cursor: pointer;
+}
+.en-leave-btn:hover {
+  border-color: #ffcc44;
+  color: #ffcc44;
+}
+
+.en-header-row {
+  position: relative;
+  margin-bottom: 6px;
+}
+
+.en-zone-title {
+  color: #ffff00;
+  font-size: 13px;
+  font-weight: bold;
+  text-shadow: 0 0 6px rgba(255, 255, 0, 0.5);
+}
+
+.en-loading {
+  color: #cccccc;
+  padding: 16px;
+  text-align: center;
+  font-size: 12px;
+}

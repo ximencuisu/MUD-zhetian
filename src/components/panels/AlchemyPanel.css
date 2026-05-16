@@ -1,0 +1,410 @@
+.alchemy-panel {
+  padding: 16px;
+  color: var(--green);
+  background: linear-gradient(180deg, rgba(5, 0, 15, 0.95) 0%, rgba(2, 0, 8, 0.98) 100%);
+  min-height: 100%;
+  position: relative;
+}
+
+.alchemy-title {
+  font-size: 18px;
+  margin-bottom: 12px;
+  text-align: center;
+  color: var(--gold);
+  text-shadow: 0 0 12px rgba(255, 215, 0, 0.4);
+  letter-spacing: 2px;
+}
+
+.alchemy-empty {
+  text-align: center;
+  padding: 40px;
+  color: var(--text-muted);
+}
+
+.alchemy-top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background: rgba(1, 8, 2, 0.8);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  margin-bottom: 16px;
+  font-size: 13px;
+}
+
+.alchemy-top-bar .gold-amount {
+  color: var(--gold);
+  font-weight: bold;
+  font-size: 14px;
+}
+
+/* === Section Titles === */
+.section-title {
+  font-size: 13px;
+  color: var(--cyan);
+  margin-bottom: 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+
+.lock-title {
+  color: var(--text-muted);
+  opacity: 0.6;
+}
+
+/* === No Recipes === */
+.no-recipes {
+  text-align: center;
+  padding: 30px 16px;
+  color: var(--text-muted);
+}
+
+.no-recipes .hint {
+  font-size: 11px;
+  margin-top: 6px;
+  opacity: 0.6;
+}
+
+/* === Recipe List === */
+.alchemy-recipe-list {
+  margin-bottom: 16px;
+}
+
+.locked-recipes {
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+/* === Recipe Card === */
+.recipe-card {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: linear-gradient(180deg, rgba(5, 0, 18, 0.9) 0%, rgba(2, 0, 10, 0.95) 100%);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: var(--green);
+  font-family: inherit;
+  font-size: 13px;
+}
+
+.recipe-card:hover {
+  border-color: #8866ff;
+  background: linear-gradient(180deg, rgba(10, 0, 30, 0.9) 0%, rgba(5, 0, 15, 0.95) 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 12px rgba(100, 60, 255, 0.15);
+}
+
+.recipe-card.selected {
+  border-color: #8866ff;
+  background: linear-gradient(180deg, rgba(15, 5, 35, 0.95) 0%, rgba(8, 2, 20, 0.98) 100%);
+  box-shadow: 0 0 16px rgba(100, 60, 255, 0.2);
+}
+
+.recipe-card.locked {
+  cursor: default;
+  opacity: 0.6;
+}
+
+.recipe-card.locked:hover {
+  transform: none;
+  box-shadow: none;
+  border-color: var(--border);
+}
+
+.recipe-card.result-success {
+  border-color: #66ff99;
+  box-shadow: 0 0 20px rgba(102, 255, 153, 0.15);
+  animation: glow-success 0.6s ease-out;
+}
+
+.recipe-card.result-fail {
+  border-color: #ff4444;
+  box-shadow: 0 0 20px rgba(255, 68, 68, 0.1);
+  animation: shake 0.4s ease-out;
+}
+
+/* Recipe header */
+.recipe-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.recipe-name {
+  font-weight: bold;
+  font-size: 13px;
+  color: #bb99ff;
+}
+
+.recipe-tier {
+  font-size: 10px;
+  padding: 1px 6px;
+  border-radius: 3px;
+  border: 1px solid currentColor;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.lock-req {
+  font-size: 10px;
+  color: var(--text-muted);
+  padding: 1px 6px;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+}
+
+/* Recipe result */
+.recipe-result {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 0;
+  margin-bottom: 6px;
+  font-size: 12px;
+}
+
+.result-icon {
+  color: var(--gold);
+  font-size: 14px;
+}
+
+.result-name {
+  font-weight: bold;
+  font-size: 13px;
+}
+
+/* Materials row */
+.recipe-materials {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: 6px;
+}
+
+.material-tag {
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid transparent;
+}
+
+.material-tag.have {
+  color: #88ccaa;
+  border-color: rgba(100, 200, 150, 0.2);
+}
+
+.material-tag.lack {
+  color: #cc6666;
+  border-color: rgba(200, 80, 80, 0.2);
+}
+
+.material-have {
+  font-size: 9px;
+  opacity: 0.6;
+  margin-left: 2px;
+}
+
+/* Meta row */
+.recipe-meta {
+  display: flex;
+  gap: 12px;
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+.meta-level, .meta-gold {
+  opacity: 0.7;
+}
+
+.meta-rate {
+  font-weight: bold;
+}
+
+/* === Craft Section === */
+.craft-section {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+.craft-area {
+  background: rgba(5, 0, 20, 0.7);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px;
+  text-align: center;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.craft-area.result-success {
+  border-color: #66ff99;
+  box-shadow: 0 0 20px rgba(102, 255, 153, 0.15);
+  animation: glow-success 0.6s ease-out;
+}
+
+.craft-area.result-fail {
+  border-color: #ff4444;
+  box-shadow: 0 0 20px rgba(255, 68, 68, 0.1);
+  animation: shake 0.4s ease-out;
+}
+
+.craft-info {
+  margin-bottom: 14px;
+}
+
+.craft-recipe-name {
+  font-size: 16px;
+  font-weight: bold;
+  color: #bb99ff;
+  margin-bottom: 12px;
+  text-shadow: 0 0 8px rgba(150, 80, 255, 0.3);
+}
+
+/* Rate bar */
+.craft-rate-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.rate-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.rate-track {
+  flex: 1;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.rate-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.rate-num {
+  font-size: 13px;
+  font-weight: bold;
+  white-space: nowrap;
+  min-width: 36px;
+  text-align: right;
+}
+
+.craft-cost {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+/* Craft button */
+.craft-btn {
+  width: 100%;
+  background: linear-gradient(180deg, #1a0a30 0%, #0f0518 100%);
+  border: 2px solid #8866ff;
+  color: #bb99ff;
+  padding: 12px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: bold;
+  transition: all 0.2s ease;
+  letter-spacing: 4px;
+  position: relative;
+  overflow: hidden;
+  font-family: inherit;
+}
+
+.craft-btn:hover:not(:disabled) {
+  background: linear-gradient(180deg, #2a1040 0%, #180a28 100%);
+  box-shadow: 0 0 20px rgba(120, 60, 255, 0.35);
+  transform: translateY(-2px);
+}
+
+.craft-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.craft-btn.crafting {
+  animation: pulse-glow 0.6s ease-in-out infinite;
+  border-color: #8866ff;
+  color: #bb99ff;
+}
+
+.craft-btn.btn-success {
+  background: linear-gradient(180deg, #0a4020 0%, #062010 100%);
+  border-color: #66ff99;
+  color: #66ff99;
+  box-shadow: 0 0 25px rgba(102, 255, 153, 0.3);
+}
+
+.craft-btn.btn-fail {
+  background: linear-gradient(180deg, #401010 0%, #200808 100%);
+  border-color: #ff4444;
+  color: #ff4444;
+}
+
+.craft-anim {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.flame {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background: #8866ff;
+  border-radius: 50%;
+  animation: sparkle 0.6s ease-in-out infinite alternate;
+}
+
+.flame:last-child {
+  animation-delay: 0.3s;
+}
+
+.craft-hint {
+  margin-top: 8px;
+  font-size: 11px;
+  color: #ff8844;
+}
+
+/* === Animations === */
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 10px rgba(120, 60, 255, 0.2); }
+  50% { box-shadow: 0 0 25px rgba(120, 60, 255, 0.5); }
+}
+
+@keyframes glow-success {
+  0% { box-shadow: 0 0 0 rgba(102, 255, 153, 0); }
+  50% { box-shadow: 0 0 40px rgba(102, 255, 153, 0.4); }
+  100% { box-shadow: 0 0 20px rgba(102, 255, 153, 0.2); }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(6px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(4px); }
+}
+
+@keyframes sparkle {
+  0% { opacity: 0.2; transform: scale(0.5); }
+  100% { opacity: 1; transform: scale(1.2); }
+}

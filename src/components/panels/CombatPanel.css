@@ -1,0 +1,433 @@
+/* ── Combat Panel ── */
+
+/* Auto combat settings */
+.combat-auto-settings {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+.combat-auto-btn {
+  flex: 1;
+  background: rgba(20,15,5,0.6);
+  border: 1px solid #554422;
+  color: #886622;
+  font-size: 11px;
+  padding: 5px 8px;
+  font-family: var(--font-cn);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.combat-auto-btn:hover {
+  border-color: #cc9900;
+  color: #cc9900;
+}
+.combat-auto-btn.active {
+  border-color: #00cc66;
+  color: #00cc66;
+  background: rgba(0,204,102,0.08);
+}
+
+/* Target info */
+.combat-target-section {
+  position: relative;
+}
+.combat-target-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+.combat-target-name {
+  color: #ff4444;
+  font-size: 14px;
+  font-weight: bold;
+}
+.combat-target-level {
+  color: #886622;
+  font-size: 11px;
+}
+.combat-hp-bar {
+  height: 14px;
+  background: rgba(80,10,10,0.6);
+  border: 1px solid #662200;
+  border-radius: 2px;
+  overflow: hidden;
+  position: relative;
+}
+.combat-hp-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #cc2200, #ff4400);
+  transition: width 0.3s ease;
+  border-radius: 1px;
+}
+.combat-hp-text {
+  color: #ff8855;
+  font-size: 11px;
+  text-align: right;
+  margin-top: 2px;
+}
+
+/* Combo counter */
+.combat-combo-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 6px 0;
+  margin-bottom: 4px;
+}
+.combat-combo {
+  font-size: 18px;
+  font-weight: bold;
+  font-family: var(--font-cn);
+  text-shadow: 0 0 8px currentColor;
+  transition: all 0.15s;
+}
+.combat-combo-0 { color: #554422; }
+.combat-combo-1 { color: #cc9900; }
+.combat-combo-2 { color: #ff8800; }
+.combat-combo-3 { color: #ff4400; }
+.combat-combo-4 { color: #ff0044; text-shadow: 0 0 12px #ff0044; }
+.combat-combo-5-up { color: #ff00ff; text-shadow: 0 0 16px #ff00ff; animation: combo-pulse 0.4s ease-in-out infinite alternate; }
+.combat-combo-label {
+  font-size: 11px;
+  color: #886622;
+}
+.combat-max-combo {
+  font-size: 10px;
+  color: #554422;
+}
+
+@keyframes combo-pulse {
+  from { transform: scale(1); }
+  to { transform: scale(1.15); }
+}
+
+/* Combat log */
+.combat-log-section {
+  max-height: 140px;
+  overflow-y: auto;
+  background: rgba(0,0,0,0.3);
+  border: 1px solid #1a1a0a;
+  border-radius: 2px;
+  padding: 4px 6px;
+}
+.combat-log-section::-webkit-scrollbar { width: 3px; }
+.combat-log-section::-webkit-scrollbar-thumb { background: #333; }
+.combat-log-entry {
+  font-size: 10px;
+  padding: 2px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+  line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.combat-log-entry:last-child { border-bottom: none; }
+.combat-log-dmg { color: #ff8844; }
+.combat-log-crit { color: #ffcc00; }
+.combat-log-enemy { color: #ff4444; }
+.combat-log-enemy-crit { color: #ff0066; }
+.combat-log-heal { color: #44cc88; }
+.combat-log-miss { color: #554422; }
+.combat-log-empty {
+  color: #443322;
+  font-size: 11px;
+  text-align: center;
+  padding: 16px 0;
+}
+
+/* ── Enhanced Buff/Debuff Display ── */
+
+/* Section wrapper */
+.cbe-section {
+  margin-top: 6px;
+}
+.cbe-section-title {
+  font-size: 10px;
+  color: #886622;
+  margin-bottom: 3px;
+  padding-bottom: 2px;
+  border-bottom: 1px solid rgba(100,80,30,0.2);
+}
+.cbe-section-title-buff {
+  color: #66aaff;
+  border-bottom-color: rgba(0,100,200,0.2);
+}
+.cbe-section-title-debuff {
+  color: #ff6633;
+  border-bottom-color: rgba(200,50,0,0.2);
+}
+
+/* Buff/debuff grid */
+.cbe-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+/* Empty state */
+.cbe-empty {
+  color: #443322;
+  font-size: 10px;
+  text-align: center;
+  padding: 4px 0;
+  font-style: italic;
+}
+
+/* ── Individual Buff Badge ── */
+
+.cbb-badge {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 5px;
+  border-radius: 3px;
+  font-size: 10px;
+  line-height: 1.5;
+  border: 1px solid;
+  cursor: default;
+  animation: cbb-enter 0.25s ease-out both;
+  transition: all 0.15s;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.cbb-badge:hover {
+  filter: brightness(1.3);
+  z-index: 10;
+}
+
+/* Buff (player positive) */
+.cbb-buff {
+  background: linear-gradient(135deg, rgba(0,60,160,0.2), rgba(0,80,180,0.1));
+  border-color: rgba(0,100,200,0.4);
+  color: #66aaff;
+}
+.cbb-buff:hover {
+  border-color: rgba(0,150,255,0.6);
+  box-shadow: 0 0 8px rgba(0,100,200,0.3);
+}
+
+/* Debuff (target negative) */
+.cbb-debuff {
+  background: linear-gradient(135deg, rgba(160,40,0,0.2), rgba(180,50,0,0.1));
+  border-color: rgba(200,60,0,0.4);
+  color: #ff6633;
+}
+.cbb-debuff:hover {
+  border-color: rgba(255,100,0,0.6);
+  box-shadow: 0 0 8px rgba(200,60,0,0.3);
+}
+
+/* Low duration pulse */
+.cbb-low {
+  animation: cbb-enter 0.25s ease-out both, cbb-pulse 0.8s ease-in-out infinite alternate;
+}
+
+/* Badge icon */
+.cbb-icon {
+  font-size: 11px;
+  line-height: 1;
+}
+
+/* Stat value text */
+.cbb-stat {
+  font-size: 9px;
+  opacity: 0.9;
+}
+
+/* DoT indicator */
+.cbb-dot {
+  font-size: 9px;
+  color: #ff8844;
+  background: rgba(255,100,0,0.15);
+  padding: 0 3px;
+  border-radius: 2px;
+}
+
+/* Effect type badge (stun/freeze/bleed etc) */
+.cbb-effect-badge {
+  font-size: 8px;
+  padding: 0 3px;
+  border-radius: 2px;
+  font-weight: bold;
+}
+.cbe-stun .cbb-effect-badge,
+.cbb-effect-badge.cbe-stun {
+  background: rgba(180,0,180,0.3);
+  color: #cc66ff;
+}
+.cbe-freeze .cbb-effect-badge,
+.cbb-effect-badge.cbe-freeze {
+  background: rgba(0,150,200,0.3);
+  color: #66ddff;
+}
+.cbe-silence .cbb-effect-badge,
+.cbb-effect-badge.cbe-silence {
+  background: rgba(100,100,100,0.3);
+  color: #bbbbbb;
+}
+.cbe-poison .cbb-effect-badge,
+.cbb-effect-badge.cbe-poison {
+  background: rgba(0,180,0,0.3);
+  color: #66ff66;
+}
+.cbe-bleed .cbb-effect-badge,
+.cbb-effect-badge.cbe-bleed {
+  background: rgba(180,0,0,0.3);
+  color: #ff6666;
+}
+.cbe-fear .cbb-effect-badge,
+.cbb-effect-badge.cbe-fear {
+  background: rgba(100,50,150,0.3);
+  color: #bb88ff;
+}
+
+/* Effect type border colors */
+.cbb-badge.cbe-stun { border-color: rgba(180,0,180,0.4); }
+.cbb-badge.cbe-freeze { border-color: rgba(0,150,200,0.4); }
+.cbb-badge.cbe-silence { border-color: rgba(100,100,100,0.4); }
+.cbb-badge.cbe-poison { border-color: rgba(0,180,0,0.4); }
+.cbb-badge.cbe-bleed { border-color: rgba(180,0,0,0.4); }
+.cbb-badge.cbe-fear { border-color: rgba(100,50,150,0.4); }
+
+/* Duration dots */
+.cbd-dots {
+  font-size: 7px;
+  letter-spacing: 1px;
+  opacity: 0.7;
+  line-height: 1;
+}
+
+/* ── Tooltip ── */
+
+.cbb-tooltip {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(10,8,5,0.95);
+  border: 1px solid #554422;
+  border-radius: 3px;
+  padding: 6px 8px;
+  min-width: 120px;
+  max-width: 200px;
+  z-index: 100;
+  pointer-events: none;
+  white-space: normal;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.5);
+  animation: cbb-tip-in 0.15s ease-out both;
+}
+.cbb-tooltip-header {
+  font-size: 11px;
+  font-weight: bold;
+  color: #ccaa66;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 3px;
+}
+.cbb-tooltip-effect {
+  font-size: 8px;
+  padding: 0 3px;
+  border-radius: 2px;
+}
+.cbb-tooltip-desc {
+  font-size: 9px;
+  color: #998866;
+  margin-bottom: 3px;
+  line-height: 1.3;
+}
+.cbb-tooltip-stats {
+  font-size: 9px;
+  color: #887755;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 6px;
+}
+
+/* ── Animations ── */
+
+@keyframes cbb-enter {
+  from {
+    opacity: 0;
+    transform: scale(0.85) translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes cbb-pulse {
+  from {
+    box-shadow: 0 0 0 transparent;
+  }
+  to {
+    box-shadow: 0 0 6px currentColor;
+  }
+}
+
+@keyframes cbb-tip-in {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+/* Self status */
+.vital-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.vital-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.vital-lbl {
+  width: 36px;
+  font-size: 11px;
+  color: #886622;
+  flex-shrink: 0;
+}
+.vital-bar {
+  flex: 1;
+  height: 10px;
+  background: rgba(20,15,5,0.6);
+  border: 1px solid #332211;
+  border-radius: 2px;
+  overflow: hidden;
+}
+.vital-fill {
+  height: 100%;
+  border-radius: 1px;
+  transition: width 0.3s;
+}
+.vital-num {
+  width: 80px;
+  text-align: right;
+  font-size: 11px;
+  flex-shrink: 0;
+}
+.vital-num.red { color: #ff6666; }
+.vital-num.blue { color: #6688ff; }
+
+/* Stats grid */
+.combat-stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3px 12px;
+  font-size: 11px;
+  margin-top: 6px;
+}
+.combat-stats-grid .gold { color: #ffd700; }
+.combat-stats-grid .red { color: #ff6644; }
+.combat-stats-grid .cyan { color: #44aaff; }
+.combat-stats-grid .green { color: #44cc88; }

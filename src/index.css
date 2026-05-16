@@ -1,0 +1,191 @@
+/* ═══════════════════════════════════════════════════
+   WAMUD — 遮天·东荒修炼录  Global Styles
+   Theme: Cyberpunk Green (修仙赛博绿)
+   ═══════════════════════════════════════════════════ */
+
+/* ── CSS Variables ──────────────────────────────── */
+:root {
+  /* Primary colors */
+  --green:        #00ff41;
+  --green-dim:    #00cc33;
+  --green-dark:   #003a0f;
+  --green-muted:  #225533;
+  --green-card:   #081f0c;
+
+  /* Functional colors */
+  --cyan:         #00e5ff;
+  --yellow:       #ffcc00;
+  --red:          #ff4444;
+  --orange:       #ff8800;
+  --purple:       #cc44ff;
+  --gold:         #ffd700;
+  --blue:         #4488ff;
+
+  /* Backgrounds */
+  --bg-base:      #030f04;
+  --bg-panel:     #06160a;
+  --bg-hover:     #0a2510;
+  --bg-dark:      #020a03;
+  --bg-card:      #081f0c;
+
+  /* Borders */
+  --border:       #1a4a20;
+  --border-bright:#2a7a30;
+  --border-glow:  #3aaa40;
+
+  /* Text */
+  --text:         #00ff41;
+  --text-dim:     #338844;
+  --text-muted:   #225533;
+  --text-light:   #66ff88;
+
+  /* Sizing */
+  --font-cn:      "Microsoft YaHei UI","Noto Sans SC","PingFang SC",sans-serif;
+  --font-mono:    "Cascadia Code","Fira Code","Consolas",monospace;
+  --radius-sm:    4px;
+  --radius-md:    6px;
+  --radius-lg:    8px;
+}
+
+/* ── Reset ──────────────────────────────────────── */
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: rgba(0,0,0,0); }
+html, body { margin: 0; height: 100%; overflow: hidden; }
+body {
+  background-color: var(--bg-base);
+  color: var(--text);
+  font-family: var(--font-cn);
+  font-size: 14px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+#root { height: 100%; }
+::-webkit-scrollbar { width: 6px; height: 0; }
+::-webkit-scrollbar-track { background: var(--bg-dark); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--border-bright); }
+div { box-sizing: border-box; }
+a { color: var(--cyan); text-decoration: none; cursor: pointer; }
+a:hover { color: var(--green); text-shadow: 0 0 8px rgba(0,255,65,0.4); }
+input,button,textarea { background: none; border: none; outline: none; color: inherit; font-family: inherit; font-size: inherit; }
+
+/* ── Animations ─────────────────────────────────── */
+@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slide-in-up {
+  from { transform: translateY(12px); opacity: 0; }
+  to   { transform: translateY(0);   opacity: 1; }
+}
+@keyframes pulse-glow {
+  0%, 100% { text-shadow: 0 0 4px var(--green), 0 0 8px rgba(0,255,65,0.3); }
+  50%      { text-shadow: 0 0 8px var(--green), 0 0 16px rgba(0,255,65,0.5), 0 0 24px rgba(0,170,34,0.3); }
+}
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-4px); }
+  40%, 80% { transform: translateX(4px); }
+}
+@keyframes scanline {
+  0%   { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+
+/* ── LOGIN SCREEN ───────────────────────────────── */
+.login-content {
+  height: 100%; overflow: auto;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 20px;
+  background: radial-gradient(ellipse at center, #06160a 0%, #020a03 70%, #000 100%);
+}
+.login-content::before {
+  content: ''; position: fixed; inset: 0;
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,255,65,0.02) 2px, rgba(0,255,65,0.02) 4px);
+  pointer-events: none; z-index: 1;
+}
+.mypanel {
+  width: 100%; max-width: 420px;
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: 0 0 30px rgba(0,180,60,0.1);
+  position: relative; z-index: 2;
+  animation: fade-in 0.3s ease;
+}
+.mypanel > ul { padding: 0; margin: 0; list-style: none; display: flex; }
+.mypanel > ul > li {
+  flex: 1; text-align: center; padding: 10px 0;
+  cursor: pointer; color: var(--text-muted); border-bottom: 2px solid transparent;
+  transition: all 0.2s ease;
+}
+.mypanel > ul > li:hover { color: var(--text-dim); }
+.mypanel > ul > .active {
+  color: var(--green); border-bottom-color: var(--green);
+  text-shadow: 0 0 8px rgba(0,255,65,0.3);
+}
+.mypanel .content {
+  list-style: none; padding: 1rem 1.2rem; overflow: auto;
+  color: var(--text);
+  background: var(--bg-dark);
+  border-top: 1px solid var(--border);
+}
+.mypanel .content h3 {
+  font-size: 13px; color: var(--text-dim); margin: 12px 0 6px;
+  font-weight: normal; letter-spacing: 1px;
+}
+.panel_item {
+  cursor: pointer;
+  background: transparent;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-dim);
+  list-style: none; padding: 0.6rem 1rem;
+  transition: all 0.15s ease;
+}
+.panel_item:hover { background: var(--bg-hover); color: var(--text); padding-left: 1.4rem; }
+.textbox {
+  border-bottom: solid 1px var(--border);
+  width: 80%; height: 1.5rem; padding: 6px 12px;
+  color: var(--green); font-size: 14px;
+  transition: border-color 0.2s ease;
+}
+.textbox:focus { border-color: var(--green); }
+
+/* ── OVERLAY DIALOG ─────────────────────────────── */
+.dialog-overlay {
+  position: fixed; inset: 0;
+  z-index: 200;
+  background: rgba(0,0,0,0.6);
+  display: flex; align-items: center; justify-content: center;
+  backdrop-filter: blur(2px);
+  animation: fade-in 0.15s ease;
+}
+.dialog {
+  width: 90%; max-width: 420px; max-height: 80vh; overflow-y: auto;
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: 0 0 30px rgba(0,180,60,0.15);
+  animation: slide-in-up 0.2s ease;
+}
+.dialog-header {
+  height: 1.875em;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center;
+  padding: 0 10px;
+  background: linear-gradient(90deg, #0a2a10, #0f3a18, #0a2a10);
+}
+.dialog-icon { color: var(--text-dim); }
+.dialog-title {
+  color: var(--text); font-weight: bold;
+  margin-left: 4px; flex: 1;
+  text-shadow: 0 0 6px rgba(0,255,65,0.3);
+}
+.dialog-close {
+  color: var(--text-muted); cursor: pointer;
+  font-size: 16px; padding: 0 4px;
+  transition: color 0.15s ease;
+}
+.dialog-close:hover { color: var(--red); }
+.dialog-content { padding: 8px 12px; overflow: auto; max-height: 60vh; }
+
+/* ── RESPONSIVE ─────────────────────────────────── */
+@media(min-width: 768px) {
+  body { width: 768px; margin: auto; position: relative; }
+}

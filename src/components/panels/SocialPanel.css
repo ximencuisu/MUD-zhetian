@@ -1,0 +1,589 @@
+.social-panel {
+  padding: 16px;
+  color: var(--green);
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.social-title {
+  font-size: 20px;
+  margin-bottom: 16px;
+  text-align: center;
+  color: var(--gold);
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+}
+
+.social-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 8px;
+}
+
+.tab-btn {
+  flex: 1;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-size: 12px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.tab-btn:hover {
+  border-color: var(--border-bright);
+  color: var(--text-dim);
+}
+
+.tab-btn.active {
+  background: rgba(0, 255, 65, 0.1);
+  border-color: var(--green);
+  color: var(--green);
+}
+
+.tab-count {
+  background: rgba(0, 255, 65, 0.2);
+  padding: 2px 6px;
+  border-radius: 8px;
+  font-size: 10px;
+}
+
+.tab-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: var(--red);
+  color: #fff;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: bold;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.section-header h4 {
+  font-size: 14px;
+  color: var(--cyan);
+}
+
+.add-btn {
+  background: linear-gradient(180deg, #0a2010 0%, #061508 100%);
+  border: 1px solid var(--green);
+  color: var(--green);
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 11px;
+  transition: all 0.15s ease;
+}
+
+.add-btn:hover {
+  background: linear-gradient(180deg, #0c2812 0%, #081a0a 100%);
+  box-shadow: 0 0 10px rgba(0, 255, 65, 0.3);
+}
+
+.friends-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.friend-item {
+  background: rgba(1, 10, 2, 0.9);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: all 0.15s ease;
+}
+
+.friend-item:hover {
+  border-color: var(--border-bright);
+  background: rgba(1, 10, 2, 1);
+}
+
+.friend-avatar,
+.member-avatar {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.avatar-icon {
+  font-size: 32px;
+  display: block;
+}
+
+.status-dot {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid var(--bg-dark);
+}
+
+.status-dot.online {
+  background: var(--green);
+  box-shadow: 0 0 6px var(--green);
+}
+
+.status-dot.offline {
+  background: #444;
+}
+
+.status-dot.in_combat {
+  background: var(--red);
+  animation: pulse-combat 1s ease-in-out infinite;
+}
+
+@keyframes pulse-combat {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+}
+
+.friend-info,
+.member-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.friend-name,
+.member-name {
+  font-size: 14px;
+  font-weight: bold;
+  color: var(--green);
+  margin-bottom: 4px;
+}
+
+.friend-status,
+.friend-level,
+.member-level {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.friend-actions {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.action-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  padding: 4px 8px;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 10px;
+  transition: all 0.15s ease;
+}
+
+.action-btn:hover:not(:disabled) {
+  border-color: var(--green);
+  color: var(--green);
+}
+
+.action-btn.invite:hover:not(:disabled) {
+  border-color: var(--cyan);
+  color: var(--cyan);
+}
+
+.action-btn.trade:hover:not(:disabled) {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+.action-btn.remove:hover:not(:disabled) {
+  border-color: var(--red);
+  color: var(--red);
+}
+
+.action-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.team-info {
+  background: rgba(1, 10, 2, 0.8);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 12px;
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+.team-count {
+  font-size: 14px;
+  color: var(--green);
+  margin-bottom: 4px;
+}
+
+.team-hint {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.team-members {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.member-item {
+  background: rgba(1, 10, 2, 0.9);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.leader-badge {
+  background: var(--gold);
+  color: #000;
+  padding: 2px 6px;
+  border-radius: 8px;
+  font-size: 9px;
+  margin-left: 8px;
+}
+
+.leave-btn {
+  width: 100%;
+  background: rgba(255, 68, 68, 0.2);
+  border: 1px solid rgba(255, 68, 68, 0.5);
+  color: var(--red);
+  padding: 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.15s ease;
+  margin-bottom: 16px;
+}
+
+.leave-btn:hover {
+  background: rgba(255, 68, 68, 0.3);
+  border-color: var(--red);
+}
+
+.team-rules,
+.trade-rules {
+  background: rgba(1, 10, 2, 0.7);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 12px;
+}
+
+.team-rules h4,
+.trade-rules h4 {
+  font-size: 12px;
+  color: var(--cyan);
+  margin-bottom: 8px;
+}
+
+.team-rules ul,
+.trade-rules ul {
+  list-style: none;
+  font-size: 11px;
+  line-height: 1.8;
+  color: var(--text-muted);
+}
+
+.team-rules li::before,
+.trade-rules li::before {
+  content: '◆ ';
+  color: var(--green);
+}
+
+.current-gold {
+  background: rgba(1, 10, 2, 0.8);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 12px;
+  text-align: center;
+  margin-bottom: 16px;
+  font-size: 13px;
+}
+
+.gold-amount {
+  color: var(--gold);
+  font-weight: bold;
+  font-size: 15px;
+}
+
+.trade-requests {
+  margin-bottom: 16px;
+}
+
+.trade-requests h4 {
+  font-size: 12px;
+  color: var(--cyan);
+  margin-bottom: 8px;
+}
+
+.request-item {
+  background: rgba(1, 10, 2, 0.9);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 12px;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.request-from {
+  font-size: 13px;
+  font-weight: bold;
+  color: var(--green);
+  margin-bottom: 4px;
+}
+
+.request-detail {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.request-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.accept-btn,
+.decline-btn {
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 11px;
+  transition: all 0.15s ease;
+}
+
+.accept-btn {
+  background: rgba(0, 255, 65, 0.2);
+  border: 1px solid var(--green);
+  color: var(--green);
+}
+
+.accept-btn:hover {
+  background: rgba(0, 255, 65, 0.3);
+}
+
+.decline-btn {
+  background: rgba(255, 68, 68, 0.2);
+  border: 1px solid rgba(255, 68, 68, 0.5);
+  color: var(--red);
+}
+
+.decline-btn:hover {
+  background: rgba(255, 68, 68, 0.3);
+}
+
+.trade-history {
+  margin-bottom: 16px;
+}
+
+.trade-history h4 {
+  font-size: 12px;
+  color: var(--cyan);
+  margin-bottom: 8px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 24px;
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.hint {
+  font-size: 10px;
+  margin-top: 4px;
+}
+
+.trade-window-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.trade-window {
+  background: var(--bg-panel);
+  border: 2px solid var(--gold);
+  border-radius: 8px;
+  padding: 20px;
+  width: 400px;
+  max-width: 90vw;
+  animation: scale-in 0.2s ease;
+}
+
+.trade-window h3 {
+  text-align: center;
+  color: var(--gold);
+  margin-bottom: 16px;
+  font-size: 16px;
+}
+
+.trade-items {
+  margin-bottom: 16px;
+}
+
+.trade-items h4 {
+  font-size: 12px;
+  color: var(--cyan);
+  margin-bottom: 8px;
+}
+
+.items-list {
+  background: rgba(1, 10, 2, 0.9);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 8px;
+  min-height: 60px;
+}
+
+.empty-items {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 11px;
+  padding: 16px;
+}
+
+.trade-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 8px;
+  background: rgba(0, 255, 65, 0.05);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  margin-bottom: 4px;
+  font-size: 12px;
+}
+
+.trade-item button {
+  background: rgba(255, 68, 68, 0.3);
+  border: 1px solid var(--red);
+  color: var(--red);
+  width: 20px;
+  height: 20px;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+}
+
+.trade-gold-input {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.trade-gold-input label {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.trade-gold-input input {
+  flex: 1;
+  background: rgba(1, 10, 2, 0.9);
+  border: 1px solid var(--border);
+  color: var(--gold);
+  padding: 6px 8px;
+  border-radius: 3px;
+  font-size: 12px;
+}
+
+.trade-gold-input input:focus {
+  border-color: var(--gold);
+  outline: none;
+}
+
+.trade-gold-input span {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.trade-window-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.confirm-btn,
+.cancel-btn {
+  flex: 1;
+  padding: 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: bold;
+  transition: all 0.15s ease;
+}
+
+.confirm-btn {
+  background: linear-gradient(180deg, #0a2010 0%, #061508 100%);
+  border: 2px solid var(--green);
+  color: var(--green);
+}
+
+.confirm-btn:hover {
+  background: linear-gradient(180deg, #0c2812 0%, #081a0a 100%);
+  box-shadow: 0 0 12px rgba(0, 255, 65, 0.4);
+}
+
+.cancel-btn {
+  background: rgba(255, 68, 68, 0.2);
+  border: 1px solid rgba(255, 68, 68, 0.5);
+  color: var(--red);
+}
+
+.cancel-btn:hover {
+  background: rgba(255, 68, 68, 0.3);
+  border-color: var(--red);
+}
+
+.social-empty {
+  text-align: center;
+  padding: 40px;
+  color: var(--text-muted);
+}
+
+@keyframes scale-in {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}

@@ -1,0 +1,105 @@
+{
+  "rules": {
+    "players": {
+      ".read": "auth != null",
+      "$uid": {
+        ".write": "$uid === auth.uid"
+      }
+    },
+    "characters": {
+      "$uid": {
+        ".read": "$uid === auth.uid",
+        ".write": "$uid === auth.uid"
+      }
+    },
+    "rankings": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
+    "chat": {
+      ".read": "auth != null",
+      "system": {
+        ".write": "auth != null"
+      },
+      "world": {
+        ".write": "auth != null"
+      },
+      "room": {
+        "$roomId": {
+          ".write": "auth != null"
+        }
+      },
+      "private": {
+        "$convId": {
+          ".write": "auth != null"
+        }
+      }
+    },
+    "friends": {
+      "$uid": {
+        ".read": "$uid === auth.uid",
+        ".write": "$uid === auth.uid"
+      }
+    },
+    "friend_requests": {
+      "$uid": {
+        ".read": "$uid === auth.uid",
+        ".write": "auth != null"
+      }
+    },
+    "parties": {
+      ".read": "auth != null",
+      "$partyId": {
+        ".write": "auth != null"
+      }
+    },
+    "pvp": {
+      "challenges": {
+        "$uid": {
+          ".read": "$uid === auth.uid",
+          ".write": "auth != null"
+        }
+      },
+      "rankings": {
+        ".read": "auth != null",
+        "$uid": {
+          ".write": "$uid === auth.uid"
+        }
+      }
+    },
+    "guilds": {
+      ".read": "auth != null",
+      "$guildId": {
+        ".write": "auth != null"
+      }
+    },
+    "guild_members": {
+      ".read": "auth != null",
+      "$guildId": {
+        ".write": "auth != null"
+      }
+    },
+    "guild_applications": {
+      "$guildId": {
+        ".read": "auth != null",
+        ".write": "auth != null"
+      }
+    },
+    "guild_chat": {
+      "$guildId": {
+        ".read": "auth != null",
+        ".write": "auth != null"
+      }
+    },
+    "guild_wars": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
+    "zones": {
+      "$zoneId": {
+        ".read": "auth != null",
+        ".write": "auth != null"
+      }
+    }
+  }
+}

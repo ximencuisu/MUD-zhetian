@@ -1,0 +1,157 @@
+.float-win {
+  position: fixed;
+  background: linear-gradient(180deg, #061208 0%, #040d05 100%);
+  border: 1px solid #1a6630;
+  box-shadow:
+    0 0 20px rgba(0, 180, 60, 0.15),
+    0 4px 32px rgba(0, 0, 0, 0.8),
+    inset 0 1px 0 rgba(0, 255, 65, 0.1);
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-cn);
+  font-size: 12px;
+  color: var(--text);
+  user-select: none;
+  max-width: calc(100vw - 16px);
+  border-radius: 4px;
+  overflow: hidden;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.float-win:hover {
+  border-color: #2a8840;
+  box-shadow:
+    0 0 25px rgba(0, 200, 70, 0.2),
+    0 4px 32px rgba(0, 0, 0, 0.8),
+    inset 0 1px 0 rgba(0, 255, 65, 0.15);
+}
+
+.float-win-titlebar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(90deg, #0a2a10 0%, #0f3a18 50%, #0a2a10 100%);
+  border-bottom: 1px solid #1a6630;
+  padding: 4px 8px;
+  cursor: move;
+  height: 28px;
+  flex-shrink: 0;
+  transition: background 0.2s ease;
+}
+
+.float-win-titlebar:hover {
+  background: linear-gradient(90deg, #0c3012 0%, #115020 50%, #0c3012 100%);
+}
+
+.float-win-title {
+  color: #00dd55;
+  font-size: 12px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-shadow: 0 0 8px rgba(0, 200, 80, 0.5);
+}
+
+.float-win-btns {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+  margin-left: 8px;
+}
+
+.fwb {
+  background: transparent;
+  border: 1px solid #1a5520;
+  color: #448844;
+  font-size: 11px;
+  width: 18px;
+  height: 18px;
+  line-height: 1;
+  padding: 0;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-family: monospace;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 2px;
+}
+
+.fwb:hover {
+  border-color: #00cc44;
+  color: #00cc44;
+  background: rgba(0, 200, 80, 0.1);
+  transform: scale(1.05);
+}
+
+.fwb:active {
+  transform: scale(0.95);
+}
+
+.fwb.close:hover {
+  border-color: #cc2200;
+  color: #ff3322;
+  background: rgba(200, 30, 20, 0.15);
+}
+
+.float-win-body {
+  overflow-y: auto;
+  overflow-x: hidden;
+  flex: 1;
+  padding: 8px;
+}
+
+.float-win-body::-webkit-scrollbar {
+  width: 5px;
+}
+
+.float-win-body::-webkit-scrollbar-track {
+  background: #030a04;
+  border-radius: 2px;
+}
+
+.float-win-body::-webkit-scrollbar-thumb {
+  background: #1a6630;
+  border-radius: 2px;
+  transition: background 0.15s ease;
+}
+
+.float-win-body::-webkit-scrollbar-thumb:hover {
+  background: #2a8840;
+}
+
+.float-win-resize-handle {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 5px;
+  cursor: ew-resize;
+  background: transparent;
+  transition: background 0.15s ease;
+}
+
+.float-win-resize-handle:hover {
+  background: linear-gradient(90deg, transparent, rgba(0, 200, 80, 0.2));
+}
+
+.float-win.minimized .float-win-body {
+  display: none;
+}
+
+@keyframes float-window-appear {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.float-win.appearing {
+  animation: float-window-appear 0.2s ease forwards;
+}

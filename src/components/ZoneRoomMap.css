@@ -1,0 +1,150 @@
+.zrm-wrap {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: #030a05;
+}
+
+.zrm-loading {
+  color: var(--text-dim);
+  padding: 24px;
+  text-align: center;
+  font-size: 13px;
+}
+
+.zrm-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 12px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.zrm-zone-name {
+  color: var(--green);
+  font-size: 13px;
+  letter-spacing: 1px;
+}
+
+.zrm-exit-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  font-size: 11px;
+  padding: 3px 10px;
+  font-family: var(--font-cn);
+  cursor: pointer;
+  transition: all 0.12s;
+}
+.zrm-exit-btn:hover { color: var(--green); border-color: var(--green-dim); }
+
+.zrm-scroll {
+  flex: 1;
+  overflow: auto;
+  padding: 12px;
+  background: #020805;
+}
+
+.zrm-scroll::-webkit-scrollbar { width: 4px; height: 4px; }
+.zrm-scroll::-webkit-scrollbar-thumb { background: #1a3320; }
+
+.zrm-room-info {
+  padding: 8px 12px;
+  border-top: 1px solid var(--border);
+  flex-shrink: 0;
+  background: #030f05;
+}
+
+.zrm-room-name {
+  color: #ffd700;
+  font-size: 13px;
+  margin-bottom: 3px;
+}
+
+.zrm-room-desc {
+  color: #554422;
+  font-size: 11px;
+  line-height: 1.5;
+  margin-bottom: 6px;
+}
+
+.zrm-exits {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: 4px;
+}
+
+.zrm-exit-chip {
+  background: #0a1a0c;
+  border: 1px solid var(--border-bright);
+  color: var(--text-dim);
+  font-size: 10px;
+  padding: 2px 8px;
+  font-family: var(--font-cn);
+  cursor: pointer;
+  transition: all 0.12s;
+}
+.zrm-exit-chip:hover { color: var(--green); border-color: var(--green-dim); }
+
+.zrm-npcs {
+  color: #cc4400;
+  font-size: 11px;
+}
+
+.zrm-legend {
+  display: flex;
+  gap: 12px;
+  padding: 4px 12px;
+  font-size: 10px;
+  color: #443322;
+  border-top: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+/* ── Elite room markers ── */
+.zrm-room-elite {
+  border-left: 2px solid #ff6600 !important;
+  box-shadow: inset 3px 0 8px rgba(255,100,0,0.15);
+}
+
+.zrm-room-elite .zrm-room-name {
+  color: #ff8833 !important;
+}
+
+.zrm-room-elite .zrm-room-name::after {
+  content: ' ⚡精英';
+  font-size: 10px;
+  color: #ff6600;
+  border: 1px solid #ff6600;
+  border-radius: 2px;
+  padding: 0 4px;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
+.zrm-room-boss {
+  border-left: 2px solid #ff2222 !important;
+  box-shadow: inset 3px 0 8px rgba(255,0,0,0.15);
+}
+
+.zrm-room-boss .zrm-room-name {
+  color: #ff4444 !important;
+}
+
+.zrm-room-boss .zrm-room-name::after {
+  content: ' 💀Boss';
+  font-size: 10px;
+  color: #ff2222;
+  border: 1px solid #ff2222;
+  border-radius: 2px;
+  padding: 0 4px;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.7; }
+}

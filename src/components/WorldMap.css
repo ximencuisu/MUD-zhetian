@@ -1,0 +1,96 @@
+.world-map-wrap {
+  position: relative;
+  padding: 0 0 8px;
+}
+
+.world-map-title {
+  color: var(--green);
+  font-size: 12px;
+  padding: 6px 12px 4px;
+  border-bottom: 1px solid var(--border);
+  letter-spacing: 1px;
+}
+
+.world-map-svg-wrap {
+  padding: 8px;
+  background: rgba(5, 10, 3, 0.9);
+}
+
+.world-map-svg-wrap svg {
+  border: 1px solid var(--border);
+}
+
+.world-map-legend {
+  display: flex;
+  gap: 12px;
+  padding: 4px 12px;
+  font-size: 10px;
+  color: #443322;
+  flex-wrap: wrap;
+}
+
+/* Zone info popup */
+.world-map-popup {
+  position: absolute;
+  bottom: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #050f06;
+  border: 1px solid var(--border-bright);
+  box-shadow: 0 0 20px rgba(0,180,60,0.2);
+  padding: 12px 16px;
+  min-width: 260px;
+  z-index: 10;
+}
+
+.wmp-name {
+  color: #ffd700;
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+.wmp-danger { color: #cc4400; font-size: 11px; margin-bottom: 6px; }
+.wmp-desc { color: #886622; font-size: 11px; line-height: 1.6; margin-bottom: 6px; }
+.wmp-rooms, .wmp-boss { color: #554422; font-size: 11px; margin-bottom: 2px; }
+
+.wmp-btns {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.wmp-enter-btn {
+  flex: 1;
+  padding: 5px 0;
+  background: rgba(100,50,0,0.4);
+  border: 1px solid #cc6600;
+  color: #ff9900;
+  font-family: var(--font-cn);
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.12s;
+}
+.wmp-enter-btn:hover:not(:disabled) {
+  background: rgba(150,70,0,0.6);
+  color: #ffcc00;
+}
+.wmp-enter-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  color: #664400;
+}
+
+.wmp-close-btn {
+  padding: 5px 14px;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: #443322;
+  font-family: var(--font-cn);
+  font-size: 12px;
+  cursor: pointer;
+}
+.wmp-close-btn:hover { color: var(--text-dim); border-color: var(--border-bright); }
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.8; }
+}
