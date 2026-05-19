@@ -13,19 +13,23 @@ const firebaseConfig = {
   measurementId:     import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
 };
 
-let CONFIGURED = true;
+let CONFIGURED = false;
 
 let app: FirebaseApp | null = null;
 let db: Database | null = null;
 let auth: Auth | null = null;
 
-try {
-  app = initializeApp(firebaseConfig);
-  db = getDatabase(app);
-  auth = getAuth(app);
-} catch (e) {
-  console.warn('Firebase 初始化失败，切换到离线模式', e);
-  CONFIGURED = false;
+if (firebaseConfig.projectId && firebaseConfig.apiKey) {
+  try {
+    app = initializeApp(firebaseConfig);
+    db = getDatabase(app);
+    auth = getAuth(app);
+    CONFIGURED = true;
+  } catch (e) {
+    console.warn('Firebase 初始化失败，切换到离线模式', e);
+  }
+} else {
+  console.info('Firebase 未配置，运行在离线模式');
 }
 
 export { db, auth, CONFIGURED };

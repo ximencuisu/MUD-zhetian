@@ -16,6 +16,7 @@ export interface QuestDefinition {
   prerequisite?: string[];
   autoComplete?: boolean;
   sectExclusive?: string;
+  giverId?: string; // 任务发布者 NPC ID
 }
 
 export const QUESTS: Record<string, QuestDefinition> = {
@@ -38,6 +39,7 @@ export const QUESTS: Record<string, QuestDefinition> = {
     levelRequirement: 1,
     questType: 'main',
     autoComplete: true,
+    giverId: 'guide_elder',
   },
 
   main_first_combat: {
@@ -627,6 +629,169 @@ export const QUESTS: Record<string, QuestDefinition> = {
   },
 
   // ──────────────────────────────────────────────
+  // 终极主线任务（仙台之后）
+  // ──────────────────────────────────────────────
+  main_donghuang_explore: {
+    id: 'main_donghuang_explore',
+    title: '历练：东荒巡游',
+    description: '你已初入修炼之门，是时候踏遍东荒大地，见识更广阔的世界了。',
+    objectives: [
+      { type: 'travel', targetId: 'donghuang_plain', description: '前往东荒旷野', current: 0, required: 1 },
+      { type: 'travel', targetId: 'ancient_forest', description: '前往古林深处', current: 0, required: 1 },
+      { type: 'travel', targetId: 'source_mine_entrance', description: '前往源石矿脉', current: 0, required: 1 },
+      { type: 'kill', targetId: 'any', description: '击败沿途妖兽', current: 0, required: 10 },
+    ],
+    rewards: {
+      exp: 800,
+      gold: 400,
+      items: ['explorer_medal'],
+    },
+    levelRequirement: 8,
+    questType: 'main',
+    prerequisite: ['main_first_combat'],
+  },
+
+  main_find_guide: {
+    id: 'main_find_guide',
+    title: '奇遇：隐世高人',
+    description: '传闻东荒深处有一位隐世高人，修为通天彻地，若能得其指点，修炼之路将事半功倍。',
+    objectives: [
+      { type: 'travel', targetId: 'ancient_forest', description: '前往古林深处寻找', current: 0, required: 1 },
+      { type: 'talk', targetId: 'traveling_sage', description: '与隐世高人交谈', current: 0, required: 1 },
+      { type: 'collect', targetId: 'source_stone', description: '呈上源石作为拜师礼', current: 0, required: 5 },
+    ],
+    rewards: {
+      exp: 1500,
+      gold: 800,
+      items: ['guide_medal', 'scripture_shard_fine'],
+    },
+    levelRequirement: 12,
+    questType: 'main',
+    prerequisite: ['main_donghuang_explore'],
+  },
+
+  main_ancient_tomb: {
+    id: 'main_ancient_tomb',
+    title: '探秘：古墓惊魂',
+    description: '古林深处发现了一座上古墓穴，墓中似乎藏有上古强者的传承。你需要小心探索。',
+    objectives: [
+      { type: 'travel', targetId: 'ancient_forest', description: '前往古林深处', current: 0, required: 1 },
+      { type: 'enter_dungeon', targetId: 'emperor_dungeon', description: '进入古墓', current: 0, required: 1 },
+      { type: 'kill_boss', targetId: 'tomb_guardian', description: '击败墓穴守护者', current: 0, required: 1 },
+      { type: 'collect', targetId: 'ancient_scripture_fragment', description: '获取古经残卷', current: 0, required: 1 },
+    ],
+    rewards: {
+      exp: 3000,
+      gold: 2000,
+      items: ['tomb_relic', 'scripture_shard_fine'],
+    },
+    levelRequirement: 18,
+    questType: 'main',
+    prerequisite: ['main_find_guide'],
+  },
+
+  main_emperor_battlefield: {
+    id: 'main_emperor_battlefield',
+    title: '传说：古皇战场',
+    description: '古皇战场近期异动频繁，有古皇遗物现世。这是你突破四极境界的契机。',
+    objectives: [
+      { type: 'travel', targetId: 'ancient_emperor_battlefield_entrance', description: '前往古皇战场', current: 0, required: 1 },
+      { type: 'talk', targetId: 'battlefield_scout', description: '与战场斥候交谈', current: 0, required: 1 },
+      { type: 'kill', targetId: 'ghost_warrior', description: '击败战场亡魂', current: 0, required: 5 },
+      { type: 'collect', targetId: 'emperor_blood', description: '收集皇血', current: 0, required: 5 },
+    ],
+    rewards: {
+      exp: 12000,
+      gold: 6000,
+      items: ['emperor_medal', 'ancient_scripture_fragment'],
+    },
+    levelRequirement: 32,
+    questType: 'main',
+    prerequisite: ['main_siji_breakthrough'],
+  },
+
+  main_dragon_vein: {
+    id: 'main_dragon_vein',
+    title: '寻踪：龙脉觉醒',
+    description: '化龙境界需要唤醒体内的龙脉之力。传说太初古矿深处有上古龙族遗迹。',
+    objectives: [
+      { type: 'travel', targetId: 'taichu_mine_entrance', description: '前往太初古矿', current: 0, required: 1 },
+      { type: 'kill', targetId: 'mine_beast', description: '击败矿脉妖兽', current: 0, required: 10 },
+      { type: 'collect', targetId: 'dragon_blood', description: '收集龙血精华', current: 0, required: 15 },
+      { type: 'talk', targetId: 'dragon_elder', description: '寻找龙族长老', current: 0, required: 1 },
+    ],
+    rewards: {
+      exp: 35000,
+      gold: 18000,
+      items: ['dragon_medal', 'dragon_pill'],
+    },
+    levelRequirement: 42,
+    questType: 'main',
+    prerequisite: ['main_hualong_dragon'],
+  },
+
+  main_xiantai_trial: {
+    id: 'main_xiantai_trial',
+    title: '天劫：九重雷劫',
+    description: '仙台境界的突破需要渡过九重天劫。天地雷霆将考验你的肉身与意志。',
+    objectives: [
+      { type: 'reach_level', targetId: '55', description: '等级达到55级', current: 0, required: 1 },
+      { type: 'collect', targetId: 'xiantai_crystal', description: '收集仙台晶石', current: 0, required: 20 },
+      { type: 'kill_boss', targetId: 'thunder_tribulation', description: '渡过九重天劫', current: 0, required: 1 },
+      { type: 'breakthrough', description: '完成仙台突破', current: 0, required: 1 },
+    ],
+    rewards: {
+      exp: 120000,
+      gold: 60000,
+      items: ['xiantai_weapon', 'divine_pill'],
+    },
+    levelRequirement: 55,
+    questType: 'main',
+    prerequisite: ['main_xiantai_ascent'],
+  },
+
+  main_final_destiny: {
+    id: 'main_final_destiny',
+    title: '终章：天道之战',
+    description: '修炼之路的终点，是与天道的最终对决。唯有战胜天道，方能证道成帝。',
+    objectives: [
+      { type: 'reach_level', targetId: '70', description: '等级达到70级', current: 0, required: 1 },
+      { type: 'collect', targetId: 'emperor_blood', description: '收集帝血', current: 0, required: 10 },
+      { type: 'collect', targetId: 'ancient_scripture_fragment', description: '收集古经残卷', current: 0, required: 5 },
+      { type: 'kill_boss', targetId: 'heavenly_dao', description: '击败天道化身', current: 0, required: 1 },
+    ],
+    rewards: {
+      exp: 500000,
+      gold: 200000,
+      items: ['emperor_weapon', 'heavenly_dao_medal'],
+    },
+    levelRequirement: 70,
+    questType: 'main',
+    prerequisite: ['main_xiantai_breakthrough'],
+  },
+
+  main_sect_war: {
+    id: 'main_sect_war',
+    title: '风云：门派之争',
+    description: '各大门派之间的矛盾日益激化，一场门派大战即将爆发。你需要选择立场。',
+    objectives: [
+      { type: 'talk', targetId: 'sect_leader', description: '与门派掌门交谈', current: 0, required: 1 },
+      { type: 'kill', targetId: 'sect_enemy', description: '击败敌对门派弟子', current: 0, required: 10 },
+      { type: 'collect', targetId: 'sect_honor_medal', description: '收集门派荣誉勋章', current: 0, required: 3 },
+      { type: 'complete_dungeon', targetId: 'sect_war_dungeon', description: '完成门派战副本', current: 0, required: 1 },
+    ],
+    rewards: {
+      exp: 20000,
+      gold: 10000,
+      items: ['sect_war_medal', 'sacred_golden_sword'],
+      reputation: { taixuan_sect: 500 },
+    },
+    levelRequirement: 35,
+    questType: 'main',
+    prerequisite: ['main_emperor_battlefield'],
+  },
+
+  // ──────────────────────────────────────────────
   // 更多支线任务
   // ──────────────────────────────────────────────
   side_ancient_forest: {
@@ -732,6 +897,381 @@ export const QUESTS: Record<string, QuestDefinition> = {
     },
     levelRequirement: 5,
     questType: 'daily',
+  },
+
+  // ──────────────────────────────────────────────
+  // 更多每日任务
+  // ──────────────────────────────────────────────
+  daily_gathering: {
+    id: 'daily_gathering',
+    title: '日常：采药修炼',
+    description: '每天采集灵药，提升采药技能。',
+    objectives: [
+      { type: 'collect', targetId: 'green_herb', description: '采集灵草', current: 0, required: 5 },
+    ],
+    rewards: {
+      exp: 250,
+      gold: 150,
+      items: ['herb_bag'],
+    },
+    levelRequirement: 5,
+    questType: 'daily',
+  },
+
+  daily_cooking: {
+    id: 'daily_cooking',
+    title: '日常：烹饪修炼',
+    description: '每天烹饪一份灵食，提升烹饪技能。',
+    objectives: [
+      { type: 'alchemy', description: '烹饪灵食', current: 0, required: 1 },
+    ],
+    rewards: {
+      exp: 300,
+      gold: 200,
+      items: ['cooking_material_box'],
+    },
+    levelRequirement: 10,
+    questType: 'daily',
+  },
+
+  daily_world_boss: {
+    id: 'daily_world_boss',
+    title: '日常：讨伐妖兽',
+    description: '每天参与一次世界Boss讨伐，为东荒的和平出一份力。',
+    objectives: [
+      { type: 'kill', targetId: 'world_boss', description: '参与世界Boss讨伐', current: 0, required: 1 },
+    ],
+    rewards: {
+      exp: 1500,
+      gold: 800,
+      items: ['boss_medal'],
+    },
+    levelRequirement: 20,
+    questType: 'daily',
+  },
+
+  daily_sect_contribution: {
+    id: 'daily_sect_contribution',
+    title: '日常：门派贡献',
+    description: '每天为门派做贡献，提升门派声望。',
+    objectives: [
+      { type: 'talk', targetId: 'sect_quest_master', description: '向门派长老汇报', current: 0, required: 1 },
+      { type: 'collect', targetId: 'source_stone', description: '上交源石', current: 0, required: 5 },
+    ],
+    rewards: {
+      exp: 400,
+      gold: 250,
+      reputation: { taixuan_sect: 30 },
+    },
+    levelRequirement: 10,
+    questType: 'daily',
+    prerequisite: ['main_join_sect'],
+  },
+
+  daily_arena_ranking: {
+    id: 'daily_arena_ranking',
+    title: '日常：竞技排名',
+    description: '每天参加竞技场比赛，提升排名。',
+    objectives: [
+      { type: 'pvp_win', description: '赢得竞技场比赛', current: 0, required: 2 },
+    ],
+    rewards: {
+      exp: 1000,
+      gold: 600,
+      reputation: { central_city: 30 },
+    },
+    levelRequirement: 25,
+    questType: 'daily',
+    prerequisite: ['main_enter_central_city'],
+  },
+
+  daily_mount_care: {
+    id: 'daily_mount_care',
+    title: '日常：坐骑喂养',
+    description: '每天喂养坐骑，提升坐骑亲密度。',
+    objectives: [
+      { type: 'talk', targetId: 'mount_master', description: '与坐骑管理员交谈', current: 0, required: 1 },
+    ],
+    rewards: {
+      exp: 200,
+      gold: 100,
+      items: ['mount_feed'],
+    },
+    levelRequirement: 5,
+    questType: 'daily',
+  },
+
+  daily_pet_training: {
+    id: 'daily_pet_training',
+    title: '日常：灵宠训练',
+    description: '每天训练灵宠，提升灵宠实力。',
+    objectives: [
+      { type: 'talk', targetId: 'pet_master', description: '与灵宠训练师交谈', current: 0, required: 1 },
+    ],
+    rewards: {
+      exp: 250,
+      gold: 120,
+      items: ['pet_feed'],
+    },
+    levelRequirement: 10,
+    questType: 'daily',
+  },
+
+  daily_enhance_equipment: {
+    id: 'daily_enhance_equipment',
+    title: '日常：装备强化',
+    description: '每天强化装备，提升战斗力。',
+    objectives: [
+      { type: 'enhance', description: '强化装备', current: 0, required: 2 },
+    ],
+    rewards: {
+      exp: 500,
+      gold: 300,
+      items: ['enhance_stone'],
+    },
+    levelRequirement: 15,
+    questType: 'daily',
+  },
+
+  // ──────────────────────────────────────────────
+  // 更多支线任务（低等级）
+  // ──────────────────────────────────────────────
+  side_herb_boy_crisis: {
+    id: 'side_herb_boy_crisis',
+    title: '危机：药童失踪',
+    description: '归元村药师的学徒进山采药后失踪了，你需要前去寻找。',
+    objectives: [
+      { type: 'travel', targetId: 'donghuang_plain', description: '前往东荒旷野', current: 0, required: 1 },
+      { type: 'kill', targetId: 'wild_beast', description: '击败野兽', current: 0, required: 3 },
+      { type: 'talk', targetId: 'herb_boy', description: '找到药童', current: 0, required: 1 },
+    ],
+    rewards: {
+      exp: 300,
+      gold: 200,
+      items: ['rare_herb'],
+    },
+    levelRequirement: 5,
+    questType: 'side',
+    prerequisite: ['main_awakening'],
+  },
+
+  side_mine_anomaly: {
+    id: 'side_mine_anomaly',
+    title: '异变：矿脉异动',
+    description: '源石矿脉出现异常，矿工们报告说听到了奇怪的声音。',
+    objectives: [
+      { type: 'travel', targetId: 'source_mine_entrance', description: '前往源石矿脉', current: 0, required: 1 },
+      { type: 'kill', targetId: 'mine_beast', description: '击败矿脉妖兽', current: 0, required: 5 },
+      { type: 'collect', targetId: 'source_crystal', description: '收集异常源晶', current: 0, required: 3 },
+    ],
+    rewards: {
+      exp: 600,
+      gold: 400,
+      items: ['rare_source_crystal'],
+    },
+    levelRequirement: 10,
+    questType: 'side',
+    prerequisite: ['main_first_combat'],
+  },
+
+  side_wandering_swordsman: {
+    id: 'side_wandering_swordsman',
+    title: '奇遇：流浪剑客',
+    description: '一位流浪剑客出现在归元村，他似乎在寻找什么东西。',
+    objectives: [
+      { type: 'talk', targetId: 'wandering_swordsman', description: '与流浪剑客交谈', current: 0, required: 1 },
+      { type: 'kill', targetId: 'bandit', description: '击败山贼', current: 0, required: 5 },
+      { type: 'collect', targetId: 'swordsman_letter', description: '获取剑客信物', current: 0, required: 1 },
+    ],
+    rewards: {
+      exp: 800,
+      gold: 500,
+      items: ['swordsman_medal'],
+    },
+    levelRequirement: 8,
+    questType: 'side',
+    prerequisite: ['main_awakening'],
+  },
+
+  // ──────────────────────────────────────────────
+  // 更多支线任务（中等级）
+  // ──────────────────────────────────────────────
+  side_ancient_forest_mystery: {
+    id: 'side_ancient_forest_mystery',
+    title: '秘闻：古林异象',
+    description: '古林深处出现奇异光芒，有人说看到了上古灵兽。',
+    objectives: [
+      { type: 'travel', targetId: 'ancient_forest', description: '前往古林深处', current: 0, required: 1 },
+      { type: 'kill', targetId: 'ancient_beast', description: '击败古林妖兽', current: 0, required: 8 },
+      { type: 'collect', targetId: 'ancient_fruit', description: '收集古林灵果', current: 0, required: 5 },
+    ],
+    rewards: {
+      exp: 4000,
+      gold: 2500,
+      items: ['ancient_beast_core', 'scripture_shard_fine'],
+    },
+    levelRequirement: 20,
+    questType: 'side',
+    prerequisite: ['main_join_sect'],
+  },
+
+  side_demon_invasion: {
+    id: 'side_demon_invasion',
+    title: '抵御：妖族入侵',
+    description: '妖族大军正在入侵东荒边境，需要勇士前去抵御。',
+    objectives: [
+      { type: 'travel', targetId: 'demon_realm_entrance', description: '前往妖界入口', current: 0, required: 1 },
+      { type: 'kill', targetId: 'demon_soldier', description: '击败妖界士兵', current: 0, required: 15 },
+      { type: 'kill', targetId: 'demon_general', description: '击败妖界将领', current: 0, required: 1 },
+    ],
+    rewards: {
+      exp: 8000,
+      gold: 5000,
+      items: ['demon_blood_essence', 'divine_pill'],
+    },
+    levelRequirement: 30,
+    questType: 'side',
+    prerequisite: ['main_daogong_breakthrough'],
+  },
+
+  side_sect_betrayal: {
+    id: 'side_sect_betrayal',
+    title: '叛乱：圣地阴谋',
+    description: '摇光圣地内部出现叛徒，与外敌勾结，意图颠覆圣地。',
+    objectives: [
+      { type: 'talk', targetId: 'sect_elder', description: '与门派长老交谈', current: 0, required: 1 },
+      { type: 'kill', targetId: 'sect_traitor', description: '击败叛徒', current: 0, required: 3 },
+      { type: 'collect', targetId: 'traitor_evidence', description: '收集叛徒证据', current: 0, required: 3 },
+    ],
+    rewards: {
+      exp: 6000,
+      gold: 4000,
+      items: ['sect_honor_medal'],
+      reputation: { yaoguan_sect: 200 },
+    },
+    levelRequirement: 25,
+    questType: 'side',
+    prerequisite: ['main_join_sect'],
+  },
+
+  // ──────────────────────────────────────────────
+  // 更多支线任务（高等级）
+  // ──────────────────────────────────────────────
+  side_dragon_ruins: {
+    id: 'side_dragon_ruins',
+    title: '探险：龙族遗迹',
+    description: '太初古矿深处发现了上古龙族的遗迹，蕴含着龙族的传承。',
+    objectives: [
+      { type: 'travel', targetId: 'taichu_mine_entrance', description: '前往太初古矿', current: 0, required: 1 },
+      { type: 'kill', targetId: 'mine_beast', description: '击败矿脉守护兽', current: 0, required: 10 },
+      { type: 'collect', targetId: 'dragon_blood', description: '收集龙血', current: 0, required: 10 },
+      { type: 'kill_boss', targetId: 'dragon_guardian', description: '击败龙族守护者', current: 0, required: 1 },
+    ],
+    rewards: {
+      exp: 25000,
+      gold: 15000,
+      items: ['dragon_medal', 'dragon_blood'],
+    },
+    levelRequirement: 40,
+    questType: 'side',
+    prerequisite: ['main_hualong_dragon'],
+  },
+
+  side_abyss_rift: {
+    id: 'side_abyss_rift',
+    title: '深渊：裂缝危机',
+    description: '深渊裂缝出现在东荒大地，虚空之力正在侵蚀现实世界。',
+    objectives: [
+      { type: 'travel', targetId: 'abyss_rift', description: '前往深渊裂缝', current: 0, required: 1 },
+      { type: 'kill', targetId: 'abyss_creature', description: '击败深渊生物', current: 0, required: 10 },
+      { type: 'collect', targetId: 'void_essence', description: '收集虚空精华', current: 0, required: 5 },
+    ],
+    rewards: {
+      exp: 30000,
+      gold: 18000,
+      items: ['abyss_medal', 'scripture_shard_rare'],
+    },
+    levelRequirement: 45,
+    questType: 'side',
+  },
+
+  side_emperor_fragment: {
+    id: 'side_emperor_fragment',
+    title: '寻宝：帝兵碎片',
+    description: '传说帝兵碎片散落在东荒各地，收集齐所有碎片可以重铸帝兵。',
+    objectives: [
+      { type: 'collect', targetId: 'emperor_fragment', description: '收集帝兵碎片', current: 0, required: 5 },
+      { type: 'kill', targetId: 'emperor_guardian', description: '击败碎片守护者', current: 0, required: 3 },
+      { type: 'talk', targetId: 'emperor_spirit_remnant', description: '与妖帝残魂交谈', current: 0, required: 1 },
+    ],
+    rewards: {
+      exp: 50000,
+      gold: 30000,
+      items: ['emperor_artifact', 'emperor_blood'],
+    },
+    levelRequirement: 50,
+    questType: 'side',
+    prerequisite: ['main_xiantai_ascent'],
+  },
+
+  // ──────────────────────────────────────────────
+  // 终局支线任务（50+）
+  // ──────────────────────────────────────────────
+  side_immortal_road: {
+    id: 'side_immortal_road',
+    title: '争锋：仙路风云',
+    description: '仙路即将开启，各方势力蠢蠢欲动。你需要在这场风云中站稳脚跟。',
+    objectives: [
+      { type: 'kill', targetId: 'immortal_competitor', description: '击败仙路竞争者', current: 0, required: 10 },
+      { type: 'collect', targetId: 'immortal_token', description: '收集仙路令牌', current: 0, required: 5 },
+      { type: 'kill_boss', targetId: 'immortal_guardian', description: '击败仙路守护者', current: 0, required: 1 },
+    ],
+    rewards: {
+      exp: 80000,
+      gold: 40000,
+      items: ['immortal_medal', 'divine_pill'],
+    },
+    levelRequirement: 55,
+    questType: 'side',
+    prerequisite: ['main_xiantai_breakthrough'],
+  },
+
+  side_heaven_trial: {
+    id: 'side_heaven_trial',
+    title: '试炼：天道考验',
+    description: '天道降下考验，只有通过考验的修炼者才能更进一步。',
+    objectives: [
+      { type: 'reach_level', targetId: '60', description: '等级达到60级', current: 0, required: 1 },
+      { type: 'kill', targetId: 'heaven_trial_enemy', description: '击败天道试炼敌人', current: 0, required: 15 },
+      { type: 'collect', targetId: 'heaven_essence', description: '收集天道精华', current: 0, required: 10 },
+    ],
+    rewards: {
+      exp: 120000,
+      gold: 60000,
+      items: ['heaven_medal', 'scripture_shard_epic'],
+    },
+    levelRequirement: 60,
+    questType: 'side',
+    prerequisite: ['main_xiantai_breakthrough'],
+  },
+
+  side_ten_thousand_race: {
+    id: 'side_ten_thousand_race',
+    title: '大战：万族纷争',
+    description: '万族大战即将爆发，各大种族都在为生存而战。',
+    objectives: [
+      { type: 'kill', targetId: 'race_enemy', description: '击败异族战士', current: 0, required: 20 },
+      { type: 'collect', targetId: 'race_trophy', description: '收集战利品', current: 0, required: 10 },
+      { type: 'kill_boss', targetId: 'race_champion', description: '击败异族冠军', current: 0, required: 1 },
+    ],
+    rewards: {
+      exp: 200000,
+      gold: 100000,
+      items: ['race_medal', 'emperor_weapon'],
+    },
+    levelRequirement: 65,
+    questType: 'side',
+    prerequisite: ['side_heaven_trial'],
   },
 };
 

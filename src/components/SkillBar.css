@@ -7,11 +7,12 @@
 
 .sb-skills {
   display: flex;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   align-items: center;
   gap: 5px;
   justify-content: flex-start;
-  overflow-x: auto;
+  max-height: 100px;
+  overflow-y: auto;
   scrollbar-width: none;
 }
 .sb-skills::-webkit-scrollbar { display: none; }

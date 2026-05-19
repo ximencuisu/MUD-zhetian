@@ -14,6 +14,7 @@ export default function SkillBar() {
   const startCultivation = useGameStore(s => s.startCultivation);
   const stopCultivation = useGameStore(s => s.stopCultivation);
   const tickCombat = useGameStore(s => s.tickCombat);
+  const processCommand = useGameStore(s => s.processCommand);
   const cultivationMode = char?.cultivationMode || 'none';
 
   if (!char) return null;
@@ -57,6 +58,17 @@ export default function SkillBar() {
             <span className="sb-icon">☯</span>
             <span className="sb-name">打坐</span>
             {cultivationMode === 'meditate' && <span className="sb-cd">●</span>}
+          </button>
+        </div>
+
+        <div className="sb-skill-wrap">
+          <button
+            className="sb-cult-btn"
+            onClick={() => processCommand('breakthrough')}
+            title="突破当前境界"
+          >
+            <span className="sb-icon">🔥</span>
+            <span className="sb-name">突破</span>
           </button>
         </div>
 

@@ -204,6 +204,11 @@
   background: rgba(255, 215, 0, 0.08);
   border-left: 2px solid var(--gold);
 }
+.msg-line.highlighted .msg-content {
+  color: #ffff00 !important;
+  text-shadow: 0 0 8px rgba(255, 255, 0, 0.6);
+  font-weight: bold;
+}
 
 .msg-line.remote {
   border-left: 2px solid rgba(0, 180, 60, 0.3);
@@ -215,13 +220,25 @@
   background: rgba(255, 68, 68, 0.05);
   border-left: 2px solid rgba(255, 68, 68, 0.4);
 }
+.msg-line.combat .msg-content {
+  color: #ff4444 !important;
+  text-shadow: 0 0 5px rgba(255, 68, 68, 0.5);
+}
 
 .msg-line.system {
   background: rgba(0, 204, 255, 0.03);
 }
+.msg-line.system .msg-content {
+  color: #00ccff !important;
+  text-shadow: 0 0 5px rgba(0, 204, 255, 0.5);
+}
 
 .msg-line.world {
   background: rgba(255, 204, 0, 0.03);
+}
+.msg-line.world .msg-content {
+  color: #ffcc00 !important;
+  text-shadow: 0 0 5px rgba(255, 204, 0, 0.5);
 }
 
 .msg-prefix {
@@ -382,11 +399,13 @@
   background: linear-gradient(90deg, rgba(255, 215, 0, 0.08) 0%, rgba(255, 215, 0, 0.03) 100%);
   border: 1px solid rgba(255, 215, 0, 0.3);
   border-radius: 4px;
-  padding: 8px 12px !important;
+  padding: 12px 12px !important;
   margin: 6px 0 !important;
   animation: announce-flash 2s ease-in-out;
   position: relative;
   overflow: hidden;
+  align-items: center;
+  min-height: 32px;
 }
 
 .msg-announcement::before {

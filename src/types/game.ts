@@ -494,6 +494,7 @@ export interface Character {
   master: string | null;
   guildId: string | null;
   guildRank: 'leader' | 'vice_leader' | 'elder' | 'elite' | 'member' | null;
+  partyId: string | null;
   inventory: string[];
   equipment: EquipmentSlots;
   enhanceLevels: Record<string, number>; // 装备强化等级 { slot: level }

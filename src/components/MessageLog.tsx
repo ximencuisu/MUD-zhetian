@@ -5,7 +5,7 @@ import { listenChat, sendChatMsg, ChatMsg, getPrivateConvId, listenGuildChat, se
 import { CONFIGURED } from '../firebase';
 import './MessageLog.css';
 
-type Channel = 'room' | 'world' | 'system' | 'announcement' | 'private' | 'guild';
+type Channel = 'room' | 'world' | 'system' | 'announcement' | 'private' | 'guild' | 'sect' | 'team';
 
 type MessageType = 'combat' | 'system' | 'room' | 'world' | 'say';
 
@@ -16,6 +16,8 @@ const CH_LABEL: Record<Channel, string> = {
   announcement: '通告',
   private: '私聊',
   guild:  '帮派',
+  sect:   '门派',
+  team:   '组队',
 };
 const CH_COLOR: Record<Channel, string> = {
   room:   '#00ff41',
@@ -24,6 +26,8 @@ const CH_COLOR: Record<Channel, string> = {
   announcement: '#ffd700',
   private: '#ff44ff',
   guild:  '#ff8800',
+  sect:   '#00ccff',
+  team:   '#44ff44',
 };
 
 const LOCAL_COLORS: Record<string, string> = {
@@ -120,6 +124,8 @@ export default function MessageLog() {
   const [roomMsgs, setRoomMsgs] = useState<ChatMsg[]>([]);
   const [privateMsgs, setPrivateMsgs] = useState<ChatMsg[]>([]);
   const [guildMsgs, setGuildMsgs] = useState<{from:string;fromName:string;text:string;timestamp:number}[]>([]);
+  const [sectMsgs, setSectMsgs] = useState<ChatMsg[]>([]);
+  const [teamMsgs, setTeamMsgs] = useState<ChatMsg[]>([]);
   const [privateTarget, setPrivateTarget] = useState<string | null>(null);
   const [privateContacts, setPrivateContacts] = useState<{name:string;time:number}[]>([]);
   const [chatInput, setChatInput] = useState('');
@@ -127,6 +133,8 @@ export default function MessageLog() {
   const [showFilter, setShowFilter] = useState(false);
   const [unreadPrivate, setUnreadPrivate] = useState(0);
   const [unreadGuild, setUnreadGuild] = useState(0);
+  const [unreadSect, setUnreadSect] = useState(0);
+  const [unreadTeam, setUnreadTeam] = useState(0);
   const [typeFilters, setTypeFilters] = useState<Record<MessageType, boolean>>({
     combat: true,
     system: true,
@@ -162,6 +170,20 @@ export default function MessageLog() {
     return unsub;
   }, [character?.guildId]);
 
+  // Listen sect chat
+  useEffect(() => {
+    if (!CONFIGURED || !character?.sect) return;
+    const unsub = listenChat('sect', setSectMsgs, character.sect);
+    return unsub;
+  }, [character?.sect]);
+
+  // Listen team chat
+  useEffect(() => {
+    if (!CONFIGURED || !character?.partyId) return;
+    const unsub = listenChat('team', setTeamMsgs, character.partyId);
+    return unsub;
+  }, [character?.partyId]);
+
   useEffect(() => {
     if (!CONFIGURED || !currentRoomId) return;
     const unsub = listenChat('room', setRoomMsgs, currentRoomId);
@@ -194,6 +216,24 @@ export default function MessageLog() {
     }
   }, [guildMsgs.length, activeChannel]);
 
+  // Track unread sect messages
+  useEffect(() => {
+    if (activeChannel !== 'sect' && sectMsgs.length > 0) {
+      setUnreadSect(prev => prev + 1);
+    } else {
+      setUnreadSect(0);
+    }
+  }, [sectMsgs.length, activeChannel]);
+
+  // Track unread team messages
+  useEffect(() => {
+    if (activeChannel !== 'team' && teamMsgs.length > 0) {
+      setUnreadTeam(prev => prev + 1);
+    } else {
+      setUnreadTeam(0);
+    }
+  }, [teamMsgs.length, activeChannel]);
+
   // Update contacts when receiving private msg
   useEffect(() => {
     if (!uid || privateMsgs.length === 0) return;
@@ -216,6 +256,12 @@ export default function MessageLog() {
   const sendChat = useCallback(() => {
     const text = chatInput.trim();
     if (!text || !character) return;
+
+    // 始终添加本地消息
+    const localPrefix = CH_LABEL[activeChannel] || '说';
+    addMessage({ id: Date.now().toString(), channel: 'say', sender: character.name, content: `[${localPrefix}] 你说："${text}"` });
+
+    // 尝试发送到Firebase（如果配置了的话）
     if (activeChannel === 'private' && privateTarget) {
       sendChatMsg({
         uid,
@@ -225,23 +271,37 @@ export default function MessageLog() {
         toUid: privateTarget,
         toName: privateTarget,
       });
-      // Also add local echo
-      addMessage({ id: Date.now().toString(), channel: 'say', sender: character.name, content: `你对${privateTarget}】说："${text}"` });
     } else if (activeChannel === 'guild' && character.guildId) {
       sendGuildChat(character.guildId, uid, character.name, text);
-      addMessage({ id: Date.now().toString(), channel: 'say', sender: character.name, content: `[帮派] 你说："${text}"` });
-    } else {
+    } else if (activeChannel === 'sect' && character.sect) {
       sendChatMsg({
         uid,
         sender: character.name,
         content: text,
-        channel: activeChannel === 'room' ? 'room' : activeChannel as 'world' | 'system',
+        channel: 'sect',
+        sectId: character.sect,
+      });
+    } else if (activeChannel === 'team' && character.partyId) {
+      sendChatMsg({
+        uid,
+        sender: character.name,
+        content: text,
+        channel: 'team',
+        partyId: character.partyId,
+      });
+    } else if (activeChannel === 'room' || activeChannel === 'world' || activeChannel === 'system') {
+      sendChatMsg({
+        uid,
+        sender: character.name,
+        content: text,
+        channel: activeChannel as 'room' | 'world' | 'system',
       }, activeChannel === 'room' ? currentRoomId : undefined);
     }
+
     setChatInput('');
   }, [chatInput, character, activeChannel, currentRoomId, uid, privateTarget, addMessage]);
 
-  const channels: Channel[] = ['room', 'world', 'system', 'private', 'guild'];
+  const channels: Channel[] = ['room', 'world', 'system', 'private', 'guild', 'sect', 'team'];
 
   const filteredMessages = useMemo(() => {
     let msgs = messages;
@@ -285,6 +345,12 @@ export default function MessageLog() {
             )}
             {ch === 'guild' && unreadGuild > 0 && (
               <span className="msg-ch-badge" style={{ background: '#ff8800' }}>{unreadGuild}</span>
+            )}
+            {ch === 'sect' && unreadSect > 0 && (
+              <span className="msg-ch-badge" style={{ background: '#00ccff' }}>{unreadSect}</span>
+            )}
+            {ch === 'team' && unreadTeam > 0 && (
+              <span className="msg-ch-badge" style={{ background: '#44ff44' }}>{unreadTeam}</span>
             )}
           </button>
         ))}
@@ -375,6 +441,40 @@ export default function MessageLog() {
             <div className="msg-offline-hint">加入帮派后才能使用帮派频道</div>
           )
         )}
+        {activeChannel === 'sect' && (
+          CONFIGURED && character.sect ? (
+            sectMsgs.length === 0 ? (
+              <div className="msg-offline-hint">门派频道暂无消息</div>
+            ) : (
+              sectMsgs.map(msg => (
+                <div key={msg.id} className={`msg-line remote sect-${msg.sender === uid ? 'sent' : 'received'}`}>
+                  <span className="msg-prefix" style={{ color: '#00ccff' }}>[门派]</span>
+                  <span className="msg-sender" style={{ color: msg.sender === uid ? '#66ddff' : '#00ccff' }}>{msg.sender}：</span>
+                  <span className="msg-content" style={{ color: '#dddddd' }}>{msg.content}</span>
+                </div>
+              ))
+            )
+          ) : (
+            <div className="msg-offline-hint">加入门派后才能使用门派频道</div>
+          )
+        )}
+        {activeChannel === 'team' && (
+          CONFIGURED && character.partyId ? (
+            teamMsgs.length === 0 ? (
+              <div className="msg-offline-hint">组队频道暂无消息</div>
+            ) : (
+              teamMsgs.map(msg => (
+                <div key={msg.id} className={`msg-line remote team-${msg.sender === uid ? 'sent' : 'received'}`}>
+                  <span className="msg-prefix" style={{ color: '#44ff44' }}>[组队]</span>
+                  <span className="msg-sender" style={{ color: msg.sender === uid ? '#88ff88' : '#44ff44' }}>{msg.sender}：</span>
+                  <span className="msg-content" style={{ color: '#dddddd' }}>{msg.content}</span>
+                </div>
+              ))
+            )
+          ) : (
+            <div className="msg-offline-hint">组队后才能使用组队频道</div>
+          )
+        )}
         {activeChannel === 'private' && (
           CONFIGURED ? (
             privateTarget ? (
@@ -412,22 +512,27 @@ export default function MessageLog() {
         <div ref={bottomRef} />
       </div>
 
-      {/* Chat input */}
-      {(activeChannel === 'world' || activeChannel === 'room' || activeChannel === 'guild' || (activeChannel === 'private' && privateTarget)) && CONFIGURED && (
-        <div className="msg-chat-input-row">
-          <span className="msg-chat-prefix" style={{ color: CH_COLOR[activeChannel] }}>
-            {activeChannel === 'private' ? `[私聊→${privateTarget}]` : `[${CH_LABEL[activeChannel]}]`}
-          </span>
-          <input
-            className="msg-chat-input"
-            placeholder={activeChannel === 'private' ? `发送给${privateTarget}…` : activeChannel === 'guild' ? '发送到帮派频道…' : `发送到${CH_LABEL[activeChannel]}频道…`}
-            value={chatInput}
-            onChange={e => setChatInput(e.target.value)}
-            onKeyDown={e => e.key === 'Enter' && sendChat()}
-          />
-          <button className="msg-chat-send" onClick={sendChat}>发送</button>
-        </div>
-      )}
+      {/* Chat input — always visible */}
+      <div className="msg-chat-input-row">
+        <span className="msg-chat-prefix" style={{ color: CH_COLOR[activeChannel] }}>
+          {activeChannel === 'private' ? `[私聊→${privateTarget}]` : `[${CH_LABEL[activeChannel]}]`}
+        </span>
+        <input
+          className="msg-chat-input"
+          placeholder={
+            activeChannel === 'private' ? `发送给${privateTarget}…` :
+            activeChannel === 'guild' ? '发送到帮派频道…' :
+            activeChannel === 'sect' ? '发送到门派频道…' :
+            activeChannel === 'team' ? '发送到组队频道…' :
+            activeChannel === 'world' ? '发送到世界频道…' :
+            '说点什么…'
+          }
+          value={chatInput}
+          onChange={e => setChatInput(e.target.value)}
+          onKeyDown={e => e.key === 'Enter' && sendChat()}
+        />
+        <button className="msg-chat-send" onClick={sendChat}>发送</button>
+      </div>
     </div>
   );
 }

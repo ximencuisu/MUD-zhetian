@@ -12,7 +12,9 @@ import StatusBar from './StatusBar';
 import MessageLog from './MessageLog';
 import InputBar from './InputBar';
 import SkillBar from './SkillBar';
+import EntityPanel from './EntityPanel';
 import './GameLayout.css';
+import { useKeyboardShortcuts } from '../hooks/useKeyboardShortcuts';
 
 // Lazy load panels for code splitting
 const CharacterPanel = lazy(() => import('./panels/CharacterPanel'));
@@ -81,9 +83,26 @@ const panelMap: Record<string, React.ReactNode> = {
   combat: <PanelSuspense><CharacterPanel /></PanelSuspense>,
 };
 
+const getZoneName = (roomId: string): string => {
+  if (roomId.startsWith('guiyuan_')) return '归元村';
+  if (roomId.startsWith('taixuan_')) return '太玄门';
+  if (roomId.startsWith('shenmu_')) return '神木林';
+  if (roomId.startsWith('yuanshi_')) return '源石矿';
+  if (roomId.startsWith('central_city_')) return '中州神城';
+  if (roomId.startsWith('demon_beast_')) return '天妖山脉';
+  if (roomId.startsWith('emperor_')) return '古皇战场';
+  if (roomId.startsWith('smz_')) return '源石矿·禁区';
+  if (roomId.startsWith('edz_')) return '荒古帝陵';
+  if (roomId.startsWith('yaoguan_')) return '摇光圣地';
+  if (roomId.startsWith('ji_')) return '姬家祖地';
+  return '未知区域';
+};
+
 export default function GameLayout() {
   const s = useGameStore();
   const { character, combat, openWindows, cultivationMode } = s;
+
+  useKeyboardShortcuts(() => setShowSetting(prev => !prev));
 
   // Timer: cultivation tick every 1s (use getState to avoid dependency churn)
   useEffect(() => {
@@ -130,66 +149,57 @@ export default function GameLayout() {
 
   return (
     <div className="game-layout">
-      {/* Top Status Bar */}
-      <StatusBar />
-
       {/* Main Content */}
       <div className="game-main">
         {/* Room Info Bar */}
         <div className="room-bar">
-          <div className="room-bar-header">
-            <span className="room-bar-name">{curRoom?.name || '加载中...'}</span>
-            <span className="room-bar-look" onClick={() => s.lookRoom()} title="观察周围">📍</span>
-          </div>
           {curRoom ? (
             <>
               {curRoom.description && (
-                <div className="room-bar-desc">{curRoom.description}</div>
+                <div className="room-bar-desc">
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                    <span className="room-title-full" style={{ color: '#ffaa00', fontWeight: 'bold' }}>
+                      【{getZoneName(character.currentRoomId)}-{curRoom?.name}】
+                    </span>
+                    <span className="room-map-toggle" onClick={() => s.toggleWindow('map')} style={{ cursor: 'pointer', fontSize: '16px' }} title="区域地图">
+                      🗺️
+                    </span>
+                  </div>
+                  {curRoom.description}
+                </div>
               )}
 
               {/* Compass exit grid */}
               {visibleExits.length > 0 && (
-                <div className="compass-grid">
-                  {/* Row 0: NW, N, NE */}
-                  <div className="compass-row">
-                    <div className="compass-cell">{renderCompassExit('northwest', compassGrid, s)}</div>
-                    <div className="compass-cell compass-cell-ns">{renderCompassExit('north', compassGrid, s)}</div>
-                    <div className="compass-cell">{renderCompassExit('northeast', compassGrid, s)}</div>
-                  </div>
-                  {/* Row 1: W, center, E */}
-                  <div className="compass-row">
-                    <div className="compass-cell compass-cell-we">{renderCompassExit('west', compassGrid, s)}</div>
-                    <div className="compass-cell compass-center">
-                      <span className="compass-dot" />
-                      {/* connecting lines via pseudo-elements */}
+                <div style={{ display: 'flex', justifyContent: 'center', width: '100%', margin: '10px 0' }}>
+                  <div className="compass-grid">
+                    {/* Row 0: NW, N, NE */}
+                    <div className="compass-row">
+                      <div className="compass-cell">{renderCompassExit('northwest', compassGrid, s, ALL_ROOMS, curRoom)}</div>
+                      <div className="compass-cell compass-cell-ns">{renderCompassExit('north', compassGrid, s, ALL_ROOMS, curRoom)}</div>
+                      <div className="compass-cell">{renderCompassExit('northeast', compassGrid, s, ALL_ROOMS, curRoom)}</div>
                     </div>
-                    <div className="compass-cell compass-cell-we">{renderCompassExit('east', compassGrid, s)}</div>
-                  </div>
-                  {/* Row 2: SW, S, SE */}
-                  <div className="compass-row">
-                    <div className="compass-cell">{renderCompassExit('southwest', compassGrid, s)}</div>
-                    <div className="compass-cell compass-cell-ns">{renderCompassExit('south', compassGrid, s)}</div>
-                    <div className="compass-cell">{renderCompassExit('southeast', compassGrid, s)}</div>
+                    {/* Row 1: W, center, E */}
+                    <div className="compass-row">
+                      <div className="compass-cell compass-cell-we">{renderCompassExit('west', compassGrid, s, ALL_ROOMS, curRoom)}</div>
+                      <div className="compass-cell compass-center">
+                        <div className="map-box current">{curRoom?.name}</div>
+                      </div>
+                      <div className="compass-cell compass-cell-we">{renderCompassExit('east', compassGrid, s, ALL_ROOMS, curRoom)}</div>
+                    </div>
+                    {/* Row 2: SW, S, SE */}
+                    <div className="compass-row">
+                      <div className="compass-cell">{renderCompassExit('southwest', compassGrid, s, ALL_ROOMS, curRoom)}</div>
+                      <div className="compass-cell compass-cell-ns">{renderCompassExit('south', compassGrid, s, ALL_ROOMS, curRoom)}</div>
+                      <div className="compass-cell">{renderCompassExit('southeast', compassGrid, s, ALL_ROOMS, curRoom)}</div>
+                    </div>
                   </div>
                 </div>
               )}
 
-              {roomNpcIds.length > 0 && (
-                <div className="room-bar-entities">
-                  {roomNpcIds.map(nid => {
-                    const info = getNpcInfo(nid);
-                    return info ? (
-                      <a key={nid}
-                        className={`entity-chip ${info.isHostile ? 'hostile' : 'friendly'}`}
-                        onClick={() => info.isHostile ? s.attack(nid) : s.talkTo(nid)}
-                        title={info.isHostile ? '攻击' : '对话'}
-                      >
-                        {info.isHostile ? '⚔' : '◆'} {info.name}
-                      </a>
-                    ) : null;
-                  })}
-                </div>
-              )}
+              {/* NPC交互面板 */}
+              <EntityPanel />
+
               {roomItemIds.length > 0 && (
                 <div className="room-bar-entities">
                   {roomItemIds.map(iid => {
@@ -305,28 +315,88 @@ export default function GameLayout() {
 
       {/* Right-Side Quick Access */}
       <div className="quick-access">
-        <button className="qa-btn" onClick={() => setShowStats(true)} title="属性" style={{ color: '#ffd700' }}>👤</button>
-        <button className="qa-btn" onClick={() => s.toggleWindow('bag')} title="背包">🎒</button>
-        <button className="qa-btn" onClick={() => s.toggleWindow('skills')} title="技能">📖</button>
-        <button className="qa-btn" onClick={() => character.sect ? s.toggleWindow('sect') : s.processCommand('help')} title="门派">✦</button>
-        <button className="qa-btn" onClick={() => s.toggleWindow('dungeon')} title="副本">⚔</button>
-        <button className="qa-btn" onClick={() => s.toggleWindow('map')} title="地图">🗺</button>
-        {cultivationMode !== 'none' && (
-          <button className="qa-btn cultivating" onClick={() => s.stopCultivation()} title="停止修炼">⏹</button>
-        )}
-        <button className="qa-btn" onClick={() => setShowSetting(true)} title="设置">⚙</button>
+        <button className="qa-btn" onClick={() => setShowSetting(true)}>
+          <span className="qa-icon">⚙</span>
+          <span className="qa-text">设置</span>
+          <span className="qa-shortcut">Z</span>
+        </button>
+        <button className="qa-btn" onClick={() => s.toggleWindow('dungeon')}>
+          <span className="qa-icon">🏰</span>
+          <span className="qa-text">江湖</span>
+          <span className="qa-shortcut">D</span>
+        </button>
+        <button className="qa-btn" onClick={() => s.toggleWindow('rankings')}>
+          <span className="qa-icon">📊</span>
+          <span className="qa-text">排行</span>
+          <span className="qa-shortcut">R</span>
+        </button>
+        <button className="qa-btn" onClick={() => s.toggleWindow('social')}>
+          <span className="qa-icon">✉</span>
+          <span className="qa-text">社交</span>
+          <span className="qa-shortcut">O</span>
+        </button>
+        <button className="qa-btn" onClick={() => s.toggleWindow('guild')}>
+          <span className="qa-icon">🚩</span>
+          <span className="qa-text">帮派</span>
+          <span className="qa-shortcut">G</span>
+        </button>
+        <button className="qa-btn" onClick={() => s.toggleWindow('shop')}>
+          <span className="qa-icon">🛒</span>
+          <span className="qa-text">商城</span>
+          <span className="qa-shortcut">K</span>
+        </button>
+        <button className="qa-btn" onClick={() => s.toggleWindow('tasks')}>
+          <span className="qa-icon">📋</span>
+          <span className="qa-text">任务</span>
+          <span className="qa-shortcut">Q</span>
+        </button>
+        <button className="qa-btn" onClick={() => s.toggleWindow('skills')}>
+          <span className="qa-icon">📖</span>
+          <span className="qa-text">技能</span>
+          <span className="qa-shortcut">S</span>
+        </button>
+        <button className="qa-btn" onClick={() => s.toggleWindow('sect')}>
+          <span className="qa-icon">🏯</span>
+          <span className="qa-text">门派</span>
+          <span className="qa-shortcut">P</span>
+        </button>
+        <button className="qa-btn" onClick={() => s.toggleWindow('cultivation')}>
+          <span className="qa-icon">☯</span>
+          <span className="qa-text">修炼</span>
+          <span className="qa-shortcut">X</span>
+        </button>
+        <button className="qa-btn" onClick={() => s.toggleWindow('alchemy')}>
+          <span className="qa-icon">⚗</span>
+          <span className="qa-text">炼丹</span>
+          <span className="qa-shortcut">Y</span>
+        </button>
+        <button className="qa-btn" onClick={() => s.toggleWindow('bag')}>
+          <span className="qa-icon">🎒</span>
+          <span className="qa-text">背包</span>
+          <span className="qa-shortcut">B</span>
+        </button>
+        <button className="qa-btn" onClick={() => setShowStats(true)}>
+          <span className="qa-icon">👤</span>
+          <span className="qa-text">属性</span>
+          <span className="qa-shortcut">A</span>
+        </button>
       </div>
     </div>
   );
 }
 
-function renderCompassExit(dir: string, grid: Record<string, { exists: boolean; dir: string }>, s: any) {
+function renderCompassExit(dir: string, grid: Record<string, { exists: boolean; dir: string }>, s: any, ALL_ROOMS: any, curRoom: any) {
   const key = `${COMPASS_POS[dir][0]}-${COMPASS_POS[dir][1]}`;
   const cell = grid[key];
   if (!cell) return null;
+  
+  const exit = curRoom?.exits?.find((e: any) => e.direction === dir);
+  const targetRoom = exit ? ALL_ROOMS[exit.roomId] : null;
+  const roomName = targetRoom ? targetRoom.name : exitNames[dir];
+  
   return (
     <a className="compass-exit-btn" onClick={() => s.move(dir)} title={dir}>
-      {exitNames[dir]}
+      {roomName}
     </a>
   );
 }

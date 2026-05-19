@@ -6,6 +6,7 @@ import {
 } from '../types/game';
 import { ROOMS, NPCS, ITEMS } from '../data/world';
 import { ALL_ALCHEMY_RECIPES, ALCHEMY_RECIPE_MAP } from '../data/alchemyRecipes';
+import { FORGE_RECIPE_MAP } from '../data/forgeRecipes';
 import { STARTER_SKILLS, BASE_GONGFA, ALL_SKILLS } from '../data/skills';
 import { SECTS, SECT_SKILLS } from '../data/sects';
 import { ALL_SECT_ROOMS, SECT_GATE_ROOMS, SECT_MAPS } from '../data/sectMaps';
@@ -148,9 +149,31 @@ function calcPower(character: Character): number {
 }
 
 // 每个 realmLevel 所需修为（战斗经验驱动境界等级）
-function calcExpToNext(_realm: string, realmLevel: number): number {
-  // 越高境界realmLevel需要越多修为
-  return Math.floor(80 + realmLevel * 25);
+function calcExpToNext(realm: string, realmLevel: number): number {
+  const realmIdx = REALM_ORDER.indexOf(realm);
+  const realmTier = Math.floor(Math.max(0, realmIdx) / 4);
+  return Math.floor(80 * Math.pow(1.8, realmTier) + realmLevel * (25 + realmTier * 15));
+}
+
+// 境界等级上限
+function getRealmLevelCap(realm: string): number {
+  const caps: Record<string, number> = {
+    bitterness_early: 10, bitterness_mid: 10, bitterness_late: 10, bitterness_perfect: 15,
+    spring_early: 10, spring_mid: 10, spring_late: 10, spring_perfect: 15,
+    bridge_early: 10, bridge_mid: 10, bridge_late: 10, bridge_perfect: 15,
+    farshore_early: 10, farshore_mid: 10, farshore_late: 10, farshore_perfect: 15,
+    daogong_early: 12, daogong_mid: 12, daogong_late: 12, daogong_perfect: 18,
+    siji_early: 12, siji_mid: 12, siji_late: 12, siji_perfect: 18,
+    hualong_1: 10, hualong_2: 10, hualong_3: 10, hualong_4: 10,
+    hualong_5: 10, hualong_6: 10, hualong_7: 10, hualong_8: 10, hualong_9: 15,
+    xiantai_1: 15, xiantai_2: 15, xiantai_3: 15, xiantai_4: 15, xiantai_5: 15, xiantai_6: 20,
+    zhundi_1: 15, zhundi_2: 15, zhundi_3: 15, zhundi_4: 15, zhundi_5: 15,
+    zhundi_6: 15, zhundi_7: 15, zhundi_8: 15, zhundi_9: 20,
+    dadi_1: 18, dadi_2: 18, dadi_3: 18, dadi_4: 18, dadi_5: 18,
+    dadi_6: 18, dadi_7: 18, dadi_8: 18, dadi_9: 25,
+    hongchen_xian: 30,
+  };
+  return caps[realm] || 15;
 }
 
 // 突破所需最大realmLevel（达到此等级后可手动突破）
@@ -210,7 +233,7 @@ function buildInitialCharacter(name: string, gender: 'male' | 'female', physique
     },
     luohai: 10, mingyuan: 0, shengqiao: 0, wuzang: [0, 0, 0, 0, 0],
     sect: '', sectRank: '', contribution: 0, master: '',
-    guildId: '', guildRank: '',
+    guildId: '', guildRank: '', partyId: '',
     inventory: ['qi_recovery_pill', 'qi_recovery_pill', 'qi_recovery_pill', 'iron_rod', 'cloth_robe', 'regen_potion'],
     equipment: { ...initialEquipment },
     enhanceLevels: {},
@@ -294,6 +317,9 @@ interface GameState {
   tickCombat: () => void;
   flee: () => void;
   talkTo: (npcId: string) => void;
+  observeNpc: (npcId: string) => void;
+  sparWith: (npcId: string) => void;
+  giftToNpc: (npcId: string, itemId: string) => void;
   lookRoom: () => void;
   useItem: (itemId: string) => void;
   equipItem: (itemId: string) => void;
@@ -935,6 +961,62 @@ set(s => ({
         addMessage({ channel: 'combat', sender: '🌿', content: `持续回复效果使你恢复 ${healPerTurnTotal} 点气血！` });
       }
 
+      // ── 异象特殊效果 ──
+      const phenId = char.phenomenon;
+      if (phenId) {
+        const phen = PHENOMENA[phenId];
+        if (phen) {
+          // 苦海种金莲：每回合恢复5%气血和神力
+          if (phenId === 'bitter_sea_golden_lotus') {
+            const regenHp = Math.floor(char.maxHp * 0.05);
+            const regenMp = Math.floor(char.maxMp * 0.05);
+            updateChar(c => ({
+              hp: Math.min(c.maxHp, c.hp + regenHp),
+              mp: Math.min(c.maxMp, c.mp + regenMp),
+            }));
+            addMessage({ channel: 'combat', sender: '🪷', content: `【${phen.name}】金莲化生，恢复 ${regenHp} 气血 ${regenMp} 神力！` });
+          }
+          // 万古青天长：每回合恢复8%气血
+          if (phenId === 'eternal_verdant_heaven') {
+            const regenHp = Math.floor(char.maxHp * 0.08);
+            updateChar(c => ({ hp: Math.min(c.maxHp, c.hp + regenHp) }));
+            addMessage({ channel: 'combat', sender: '🌳', content: `【${phen.name}】万古不朽，恢复 ${regenHp} 气血！` });
+          }
+          // 海上升明月：降低敌人攻击力10%（叠加debuff）
+          if (phenId === 'moon_rises_over_sea') {
+            const moonDebuff = {
+              id: 'phen_moon_debuff',
+              name: '明月压制',
+              icon: '🌙',
+              duration: 3,
+              effects: [{ stat: 'attack', value: -10, isPercent: true }],
+            };
+            const existing = get().combat.targetDebuffs || [];
+            const hasMoon = existing.some(d => d.id === 'phen_moon_debuff');
+            if (!hasMoon) {
+              set(s => ({ combat: { ...s.combat, targetDebuffs: [...(s.combat.targetDebuffs || []), moonDebuff] } }));
+              addMessage({ channel: 'combat', sender: '🌙', content: `【${phen.name}】明月压制，敌人攻击力降低10%！` });
+            }
+          }
+          // 冥王之墙：降低敌人攻速15%
+          if (phenId === 'nether_king_wall') {
+            const wallDebuff = {
+              id: 'phen_wall_debuff',
+              name: '冥王禁锢',
+              icon: '🧱',
+              duration: 2,
+              effects: [{ stat: 'attackSpeed', value: -15, isPercent: false }],
+            };
+            const existing = get().combat.targetDebuffs || [];
+            const hasWall = existing.some(d => d.id === 'phen_wall_debuff');
+            if (!hasWall) {
+              set(s => ({ combat: { ...s.combat, targetDebuffs: [...(s.combat.targetDebuffs || []), wallDebuff] } }));
+              addMessage({ channel: 'combat', sender: '🧱', content: `【${phen.name}】冥王禁锢，敌人攻速降低15！` });
+            }
+          }
+        }
+      }
+
       // 应用 DoT 伤害到目标
       if (dotTotal > 0) {
         const dotTargetHp = Math.max(0, combat.targetHp - dotTotal);
@@ -986,10 +1068,10 @@ set(s => ({
 
       // ── 境界压制（渐进式） ──
       const levelDiff = char.realmLevel - targetLevel;
-      // 每级 3%，最高 3x/最低 0.3x
-      const suppression = Math.max(0.3, Math.min(3.0, 1 + levelDiff * 0.03));
+      // 每级 10%，最高 3x/最低 0.3x（根据 mud-combat 技能优化）
+      const suppression = Math.max(0.3, Math.min(3.0, 1 + levelDiff * 0.10));
       const playerDmgMult = suppression;
-      const enemyDmgMult = Math.max(0.3, Math.min(3.0, 1 - levelDiff * 0.03));
+      const enemyDmgMult = Math.max(0.3, Math.min(3.0, 1 - levelDiff * 0.10));
 
       // ── 玩家攻击 ──
       const hit = Math.random() * 100 < stats.hit;
@@ -1065,12 +1147,16 @@ set(s => ({
 
           // 经验溢出处理：修为条驱动境界等级
           let realmLevel = char.realmLevel;
+          const levelCap = getRealmLevelCap(char.realm);
           let expToNext = calcExpToNext(char.realm, realmLevel);
-          while (newExp >= expToNext) {
+          while (newExp >= expToNext && realmLevel < levelCap) {
             newExp -= expToNext;
             realmLevel += 1;
             expToNext = calcExpToNext(char.realm, realmLevel);
             addMessage({ channel: 'system', sender: '精进', content: `修为精进${REALM_NAMES[char.realm]} Lv.${realmLevel}！` });
+          }
+          if (realmLevel >= levelCap) {
+            newExp = 0; // 满级后不再积累经验
           }
 
           // Sync ranking on kill/level-up
@@ -1267,13 +1353,15 @@ if(combat.autoCombat) {
         addMessage({ channel: 'say', sender: '系统', content: '找不到该人物' });
         return;
       }
-      // Open alchemy panel for alchemy function NPCs or the world alchemy_master
-      const isAlchemyNpc = functionNpc?.functionType === 'alchemy' || npc?.id === 'alchemy_master';
-      if (isAlchemyNpc) {
-        const alchemyName = functionNpc?.name || npc?.name || '炼丹师';
-        const alchemyDialogues = functionNpc?.dialogue || npc?.dialogue || [];
-        const line = alchemyDialogues[Math.floor(Math.random() * alchemyDialogues.length)] || '老夫炼丹六十年，有什么需要？';
-        addMessage({ channel: 'say', sender: alchemyName, content: line });
+
+      const name = npc?.name || sectNpc?.name || functionNpc?.name || '未知';
+      const dialogue = sectNpc?.dialogue || functionNpc?.dialogue || npc?.dialogue || [];
+      const line = dialogue[Math.floor(Math.random() * dialogue.length)] || '此人无话可说';
+
+      // 功能NPC服务接入
+      const funcType = functionNpc?.functionType;
+      if (funcType === 'alchemy' || npc?.id === 'alchemy_master') {
+        addMessage({ channel: 'say', sender: name, content: line });
         set(s => {
           const next = new Set(s.openWindows);
           next.add('alchemy');
@@ -1281,22 +1369,72 @@ if(combat.autoCombat) {
         });
         return;
       }
-      const isHostile = npc?.isHostile || false;
-      if (isHostile) {
-        addMessage({ channel: 'say', sender: npc.name, content: '（此人对你充满敌意，不接受对话）' });
+      if (funcType === 'shop' || npc?.shop) {
+        addMessage({ channel: 'say', sender: name, content: line });
+        addMessage({ channel: 'system', sender: '商店', content: `${name}打开了商店，输入 buy <物品名> 购买。` });
+        set(s => {
+          const next = new Set(s.openWindows);
+          next.add('shop');
+          return { openWindows: next };
+        });
         return;
       }
-      const name = npc?.name || sectNpc?.name || functionNpc?.name || '未知';
-      const dialogue = sectNpc?.dialogue || functionNpc?.dialogue || npc?.dialogue || [];
-      const line = dialogue[Math.floor(Math.random() * dialogue.length)] || '此人无话可说';
+      if (funcType === 'arena') {
+        addMessage({ channel: 'say', sender: name, content: line });
+        set(s => {
+          const next = new Set(s.openWindows);
+          next.add('arena');
+          return { openWindows: next };
+        });
+        return;
+      }
+      if (funcType === 'dungeon') {
+        addMessage({ channel: 'say', sender: name, content: line });
+        set(s => {
+          const next = new Set(s.openWindows);
+          next.add('dungeon');
+          return { openWindows: next };
+        });
+        return;
+      }
+      if (funcType === 'heal') {
+        addMessage({ channel: 'say', sender: name, content: line });
+        updateChar(c => ({
+          hp: c.maxHp,
+          mp: c.maxMp,
+          energy: c.maxEnergy,
+        }));
+        addMessage({ channel: 'system', sender: '治疗', content: `${name}为你恢复了全部气血和神力！` });
+        return;
+      }
+      if (funcType === 'transport') {
+        addMessage({ channel: 'say', sender: name, content: line });
+        addMessage({ channel: 'system', sender: '传送', content: '传送功能即将开放，敬请期待！' });
+        return;
+      }
+
+      // 敌对NPC：展示战前对话而非直接拒绝
+      const isHostile = npc?.isHostile || false;
+      if (isHostile) {
+        const hostileLine = dialogue[Math.floor(Math.random() * dialogue.length)] || '哼，找死！';
+        addMessage({ channel: 'say', sender: name, content: hostileLine });
+        addMessage({ channel: 'system', sender: '战斗', content: `${name}对你充满敌意！输入 attack ${name} 发起攻击。` });
+        return;
+      }
+
+      // 正常对话
       addMessage({ channel: 'say', sender: name, content: line });
       updateQuestProgress('talk', npcId);
 
+      // 显示可用任务
       const state = get();
       const char = state.character;
       const activeIds = new Set(state.quests);
       const npcQuests = Object.values(QUESTS).filter(q => {
         if (activeIds.has(q.id)) return false;
+        // 检查任务发布者（如果指定了 giverId，必须匹配；未指定则视为全局任务）
+        if (q.giverId && q.giverId !== npcId) return false;
+
         if (q.prerequisite && q.prerequisite.length > 0) {
           const prereqsMet = q.prerequisite.every(preId => activeIds.has(preId));
           if (!prereqsMet) return false;
@@ -1304,22 +1442,184 @@ if(combat.autoCombat) {
         return char.realmLevel >= q.levelRequirement;
       });
       if (npcQuests.length > 0) {
-        addMessage({ channel: 'system', sender: '任务', content: `${name}】有以下任务可接：` });
+        addMessage({ channel: 'system', sender: '任务', content: `${name}有以下任务可接：` });
         npcQuests.slice(0, 5).forEach(q => {
           addMessage({ channel: 'system', sender: '任务', content: `【${q.title}】${q.description}（奖励${q.rewards.exp}修为/${q.rewards.gold}金叶）` });
         });
       }
 
+      // 显示可完成任务
       const completable = Object.values(QUESTS).filter(q => {
         if (!activeIds.has(q.id)) return false;
         return q.objectives.every(o => (o.current || 0) >= (o.required || 1));
       });
       if (completable.length > 0) {
-        addMessage({ channel: 'system', sender: '任务', content: `${name}】处有以下任务可完成：` });
+        addMessage({ channel: 'system', sender: '任务', content: `${name}处有以下任务可完成：` });
         completable.slice(0, 5).forEach(q => {
           addMessage({ channel: 'system', sender: '任务', content: `【${q.title}】（已达成，奖励${q.rewards.exp}修为/${q.rewards.gold}金叶）` });
         });
       }
+    },
+
+    // ── 观察NPC（增强版） ──
+    observeNpc: (npcId: string) => {
+      const allNpcs = { ...NPCS, ...ZONE_NPCS };
+      const npc = allNpcs[npcId];
+      const sectNpc = SECT_NPC_MAP[npcId];
+      const functionNpc = SECT_FUNCTION_NPC_MAP[npcId];
+      const target = npc || (sectNpc ? {
+        id: sectNpc.id, name: sectNpc.name, description: sectNpc.description,
+        dialogue: sectNpc.dialogue, isHostile: false,
+        hp: 999, maxHp: 999, attack: 0, defense: 0,
+        expReward: 0, goldReward: 0, drops: [],
+      } : null);
+      if (!target) {
+        addMessage({ channel: 'system', sender: '观察', content: '找不到该人物' });
+        return;
+      }
+
+      const char = getChar();
+      addMessage({ channel: 'system', sender: '观察', content: '═══════════════════════════' });
+      addMessage({ channel: 'system', sender: '观察', content: `【${target.name}】` });
+      addMessage({ channel: 'system', sender: '观察', content: target.description || '看不透深浅' });
+
+      // 显示NPC属性
+      if (target.level) {
+        const levelDiff = target.level - char.realmLevel;
+        let difficulty = '';
+        if (levelDiff <= -10) difficulty = '（极易）';
+        else if (levelDiff <= -5) difficulty = '（简单）';
+        else if (levelDiff <= 0) difficulty = '（普通）';
+        else if (levelDiff <= 5) difficulty = '（困难）';
+        else if (levelDiff <= 10) difficulty = '（极难）';
+        else difficulty = '（危险）';
+        addMessage({ channel: 'system', sender: '观察', content: `等级：${target.level} ${target.realm || ''} ${difficulty}` });
+      }
+
+      if (target.isHostile) {
+        addMessage({ channel: 'system', sender: '观察', content: `气血：${target.hp}/${target.maxHp}  攻击：${target.attack}  防御：${target.defense}` });
+        addMessage({ channel: 'system', sender: '观察', content: `击败奖励：${target.expReward}修为 ${target.goldReward}金叶` });
+        if (target.drops && target.drops.length > 0) {
+          const dropNames = target.drops.map(id => ITEMS[id]?.name || id).join('、');
+          addMessage({ channel: 'system', sender: '观察', content: `可能掉落：${dropNames}` });
+        }
+      }
+
+      // 显示NPC身份
+      if (sectNpc) {
+        addMessage({ channel: 'system', sender: '观察', content: `身份：${sectNpc.rank}` });
+      }
+      if (functionNpc) {
+        const funcLabels: Record<string, string> = {
+          quest: '任务发布', shop: '商人', warehouse: '仓库管理', craft: '炼器师',
+          heal: '治疗师', transport: '传送师', arena: '竞技管理', dungeon: '副本引导', alchemy: '炼丹师',
+        };
+        addMessage({ channel: 'system', sender: '观察', content: `职能：${funcLabels[functionNpc.functionType] || functionNpc.functionType}` });
+      }
+      if (target.shop) {
+        addMessage({ channel: 'system', sender: '观察', content: '（可与此NPC交易，输入"交谈"打开商店）' });
+      }
+
+      addMessage({ channel: 'system', sender: '观察', content: '═══════════════════════════' });
+    },
+
+    // ── 切磋（非致命战斗） ──
+    sparWith: (npcId: string) => {
+      const allNpcs = { ...NPCS, ...ZONE_NPCS };
+      const npc = allNpcs[npcId];
+      const sectNpc = SECT_NPC_MAP[npcId];
+      if (!npc && !sectNpc) {
+        addMessage({ channel: 'system', sender: '切磋', content: '找不到该人物' });
+        return;
+      }
+      const target = npc || {
+        id: sectNpc!.id, name: sectNpc!.name, description: sectNpc!.description,
+        dialogue: sectNpc!.dialogue, isHostile: false,
+        hp: Math.floor(500 + (getChar().realmLevel * 50)), maxHp: Math.floor(500 + (getChar().realmLevel * 50)),
+        attack: Math.floor(50 + (getChar().realmLevel * 10)),
+        defense: Math.floor(30 + (getChar().realmLevel * 5)),
+        expReward: Math.floor(100 + (getChar().realmLevel * 20)),
+        goldReward: Math.floor(50 + (getChar().realmLevel * 10)),
+        drops: [],
+      };
+      if (target.isHostile) {
+        addMessage({ channel: 'system', sender: '切磋', content: `${target.name}是敌对NPC，无法切磋，请使用攻击。` });
+        return;
+      }
+      addMessage({ channel: 'system', sender: '切磋', content: `你向${target.name}发起切磋请求……` });
+      addMessage({ channel: 'say', sender: target.name, content: '好，请赐教！' });
+      // 切磋使用临时属性（降低伤害）
+      const sparNpc = {
+        ...target,
+        hp: target.maxHp,
+        expReward: Math.floor(target.expReward * 0.3),
+        goldReward: Math.floor(target.goldReward * 0.3),
+      };
+      set(s => ({
+        combat: {
+          ...s.combat,
+          isInCombat: true,
+          targetId: target.id,
+          targetName: `【切磋】${target.name}`,
+          targetHp: sparNpc.hp,
+          targetMaxHp: sparNpc.maxHp,
+          targetAttack: sparNpc.attack,
+          targetDefense: sparNpc.defense,
+          targetLevel: target.level || 1,
+          turnCount: 0,
+          combatLog: [],
+        },
+        _sparMode: true,
+      }));
+    },
+
+    // ── 赠送物品给NPC ──
+    giftToNpc: (npcId: string, itemId: string) => {
+      const char = getChar();
+      const invIdx = char.inventory.indexOf(itemId);
+      if (invIdx === -1) {
+        addMessage({ channel: 'system', sender: '赠送', content: '背包中没有该物品' });
+        return;
+      }
+      const allNpcs = { ...NPCS, ...ZONE_NPCS };
+      const npc = allNpcs[npcId] || SECT_NPC_MAP[npcId];
+      if (!npc) {
+        addMessage({ channel: 'system', sender: '赠送', content: '找不到该人物' });
+        return;
+      }
+      if (npc.isHostile) {
+        addMessage({ channel: 'system', sender: '赠送', content: '无法向敌对NPC赠送物品' });
+        return;
+      }
+      const item = ITEMS[itemId];
+      const itemName = item?.name || itemId;
+      const newInv = [...char.inventory];
+      newInv.splice(invIdx, 1);
+
+      // 根据物品价值给予奖励
+      const itemValue = item?.value || 10;
+      const goldReward = Math.floor(itemValue * 0.5);
+      const expReward = Math.floor(itemValue * 0.2);
+
+      addMessage({ channel: 'say', sender: '系统', content: `你将${itemName}】赠送给${npc.name}】。` });
+
+      // 特殊物品触发特殊反应
+      if (itemId.includes('herb') || itemId.includes('灵草')) {
+        addMessage({ channel: 'say', sender: npc.name, content: '多谢！这些灵草正是我需要的。' });
+      } else if (itemId.includes('source') || itemId.includes('源石')) {
+        addMessage({ channel: 'say', sender: npc.name, content: '源石！这可是修炼的好东西，多谢慷慨！' });
+      } else if (itemId.includes('scripture') || itemId.includes('经文')) {
+        addMessage({ channel: 'say', sender: npc.name, content: '经文残卷！这对我研究大道很有帮助！' });
+      } else {
+        addMessage({ channel: 'say', sender: npc.name, content: '多谢馈赠！小小回礼，不成敬意。' });
+      }
+
+      addMessage({ channel: 'system', sender: '赠送', content: `获得 ${goldReward} 金叶、${expReward} 修为作为回礼。` });
+      updateChar(c => ({
+        inventory: newInv,
+        gold: c.gold + goldReward,
+        exp: c.exp + expReward,
+      }));
     },
 
     lookRoom: () => {
@@ -2218,21 +2518,55 @@ if(req.minReputation && char.reputation < req.minReputation) {
       }
       const currentIdx = REALM_ORDER.indexOf(char.realm);
       if (currentIdx === -1 || currentIdx >= REALM_ORDER.length - 1) {
-        addMessage({ channel: 'system', sender: '突破', content: '已学会达到当前可知最高境' });
+        addMessage({ channel: 'system', sender: '突破', content: '已达到当前可知最高境界！' });
         return;
       }
 
-      // 突破需要境界等级达到阈?      const isBigRealm = currentIdx % 4 === 3; // 当前是圆满境界，下一步是大境界突?      const requiredLevel = calcBreakthroughLevel(currentIdx);
+      // 突破需要境界等级达到阈值
+      const isBigRealm = currentIdx % 4 === 3;
+      const requiredLevel = calcBreakthroughLevel(currentIdx);
 
       if (char.realmLevel < requiredLevel) {
         addMessage({ channel: 'system', sender: '突破', content: `境界积累不足！突破至${REALM_NAMES[REALM_ORDER[currentIdx + 1]]}需境界等级 ${requiredLevel}，当前仅 ${char.realmLevel}。持续修炼战斗以积累修为。` });
         return;
       }
 
+      // 突破成功率计算
+      const realmTier = Math.floor(currentIdx / 4); // 大境界阶段（0-7）
+      // 基础成功率：大境界越往后越难
+      let baseRate = isBigRealm ? Math.max(30, 90 - realmTier * 8) : Math.max(50, 95 - realmTier * 5);
+      // 等级加成：超出要求的等级每级+2%
+      const levelBonus = Math.min(20, (char.realmLevel - requiredLevel) * 2);
+      // 气运加成
+      const luckBonus = Math.min(10, Math.floor(char.attributes.qiyun * 0.3));
+      const successRate = Math.min(99, baseRate + levelBonus + luckBonus);
+
       const nextRealm = REALM_ORDER[currentIdx + 1];
       const isBigBreakthrough = isBigRealm;
 
-      // 苦海圆满突破 ?觉醒苦海异象?      const isBitternessPerfect = char.realm === 'bitterness_perfect';
+      // 判定突破是否成功
+      const roll = Math.random() * 100;
+      const success = roll < successRate;
+
+      if (!success) {
+        // 突破失败
+        const expLoss = Math.floor(char.exp * 0.3); // 损失30%当前经验
+        const hpLoss = Math.floor(char.hp * 0.2); // 损失20%气血
+        addMessage({ channel: 'system', sender: '系统', content: '────────────────────────────' });
+        addMessage({ channel: 'system', sender: '突破', content: `你盘膝而坐，引导源力冲击境界壁垒……` });
+        addMessage({ channel: 'system', sender: '突破', content: `天地源力暴动！境界壁垒纹丝不动！突破失败！` });
+        addMessage({ channel: 'system', sender: '突破', content: `突破成功率：${successRate}%（本次掷骰：${Math.floor(roll)}%）` });
+        addMessage({ channel: 'system', sender: '突破', content: `反噬之力袭来！损失 ${expLoss} 修为经验，${hpLoss} 气血。` });
+        addMessage({ channel: 'system', sender: '系统', content: '────────────────────────────' });
+        updateChar(c => ({
+          exp: Math.max(0, c.exp - expLoss),
+          hp: Math.max(1, c.hp - hpLoss),
+        }));
+        return;
+      }
+
+      // 苦海圆满突破 → 觉醒苦海异象
+      const isBitternessPerfect = char.realm === 'bitterness_perfect';
       let newPhenomenon: PhenomenonId | null = null;
       if (isBitternessPerfect && !char.phenomenonUnlocked) {
         const phenId = rollPhenomenon();
@@ -2243,13 +2577,13 @@ if(req.minReputation && char.reputation < req.minReputation) {
       const playerName = char.name;
       if (isBigBreakthrough) {
         addAnnouncement(
-          `${playerName}】突破至${REALM_NAMES[nextRealm]}】！天地变色，大道轰鸣！`,
+          `【${playerName}】突破至【${REALM_NAMES[nextRealm]}】！天地变色，大道轰鸣！`,
           '世界',
           '#ffd700'
         );
       } else {
         addAnnouncement(
-          `${playerName}】突破至${REALM_NAMES[nextRealm]}】！`,
+          `【${playerName}】突破至【${REALM_NAMES[nextRealm]}】！`,
           '世界',
           '#ffcc00'
         );
@@ -2270,23 +2604,23 @@ if(req.minReputation && char.reputation < req.minReputation) {
 
           // 世界通告：异象觉醒
           addAnnouncement(
-            `${playerName}觉醒苦海异象【${phen.name}】！${phen.rarity === 'mythic' ? '天道震颤，万道臣服！' : phen.rarity === 'legendary' ? '天地共鸣，异象显化！' : '异象之力降临'}`,
+            `【${playerName}】觉醒苦海异象【${phen.name}】！${phen.rarity === 'mythic' ? '天道震颤，万道臣服！' : phen.rarity === 'legendary' ? '天地共鸣，异象显化！' : '异象之力降临'}`,
             '世界',
             rarityColor
           );
 
           addMessage({ channel: 'system', sender: '◈◈', content: `苦海异象觉醒！` });
           addMessage({ channel: 'system', sender: '◈◈', content: phen.visualDesc });
-          addMessage({ channel: 'system', sender: rarityColor, content: `${phen.name}】的稀有度${rarityLabel}` });
+          addMessage({ channel: 'system', sender: rarityColor, content: `【${phen.name}】的稀有度【${rarityLabel}】` });
           addMessage({ channel: 'system', sender: '突破', content: `异象加成：攻${phen.buff.attackMult} 防御×${phen.buff.defenseMult} 气血×${phen.buff.hpMult} 神力×${phen.buff.mpMult}` });
           addMessage({ channel: 'system', sender: '突破', content: `特殊效果${phen.buff.specialDesc}` });
         }
 
-        addMessage({ channel: 'system', sender: '◈◈', content: `${REALM_NAMES[char.realm]}】→${REALM_NAMES[nextRealm]}】大境界突破成功！` });
+        addMessage({ channel: 'system', sender: '◈◈', content: `【${REALM_NAMES[char.realm]}】→【${REALM_NAMES[nextRealm]}】大境界突破成功！` });
         addMessage({ channel: 'system', sender: '突破', content: `所有属性巨幅提升！气血神力上限大幅增加！` });
       } else {
         addMessage({ channel: 'system', sender: '突破', content: `你凝神静气，引导源力冲刷经脉……` });
-        addMessage({ channel: 'system', sender: '◈◈', content: `${REALM_NAMES[char.realm]}】→${REALM_NAMES[nextRealm]}】小境界突破成功！` });
+        addMessage({ channel: 'system', sender: '◈◈', content: `【${REALM_NAMES[char.realm]}】→【${REALM_NAMES[nextRealm]}】小境界突破成功！` });
         addMessage({ channel: 'system', sender: '突破', content: `所有属性中幅度提升！` });
       }
       addMessage({ channel: 'system', sender: '系统', content: '────────────────────────────' });
@@ -2436,9 +2770,10 @@ if(req.minReputation && char.reputation < req.minReputation) {
         addMessage({ channel: 'system', sender: '帮助', content: '━━━━━━ 指令帮助 ━━━━━━' });
         addMessage({ channel: 'system', sender: '移动', content: 'n/s/e/w/ne/nw/se/sw 或 north/south/east/west 等' });
         addMessage({ channel: 'system', sender: '战斗', content: 'attack <目标> / auto（自动战斗）/ flee（逃跑）' });
+        addMessage({ channel: 'system', sender: 'NPC', content: 'talk <NPC>（对话）/ inspect <NPC>（查看）/ spar <NPC>（切磋）/ gift <NPC> <物品>（赠送）' });
         addMessage({ channel: 'system', sender: '物品', content: 'use <物品> / equip <装备> / unequip <槽位> / get <物品> / drop <物品> / sell <物品> / buy <物品>' });
         addMessage({ channel: 'system', sender: '修炼', content: 'cultivate（挂机修炼）/ dazuo（挂机打坐）/ stop（停止）' });
-        addMessage({ channel: 'system', sender: '观察', content: 'look（观察房间）/ talk <NPC>（对话）' });
+        addMessage({ channel: 'system', sender: '观察', content: 'look（观察房间）/ inspect <NPC>（查看NPC详情）' });
         addMessage({ channel: 'system', sender: '窗口', content: 'open <窗口名>（打开面板）' });
         addMessage({ channel: 'system', sender: '聊天', content: 'say <内容> / tell <玩家> <内容>' });
         addMessage({ channel: 'system', sender: '其他', content: 'save（保存）/ help（帮助）' });
@@ -2446,12 +2781,54 @@ if(req.minReputation && char.reputation < req.minReputation) {
         return;
       }
 
-      if (cmd.startsWith('talk ') || cmd.startsWith('ask ') || raw.startsWith('对话 ')) {
-        const npcName = raw.replace(/^(talk|ask|对话)\s+/i, '').trim();
+      if (cmd.startsWith('talk ') || cmd.startsWith('ask ') || raw.startsWith('对话 ') || raw.startsWith('交谈 ')) {
+        const npcName = raw.replace(/^(talk|ask|对话|交谈)\s+/i, '').trim();
         const npc = findVisibleEntity(npcName);
         if (npc) return talkTo(npc.id);
         addMessage({ channel: 'system', sender: '系统', content: `找不到${npcName}。请先【观察】查看此处人物。` });
         return;
+      }
+
+      // 观察NPC（增强版）
+      if (cmd.startsWith('inspect ') || raw.startsWith('查看 ') || raw.startsWith('examine ')) {
+        const npcName = raw.replace(/^(inspect|查看|examine)\s+/i, '').trim();
+        const npc = findVisibleEntity(npcName);
+        if (npc) return observeNpc(npc.id);
+        addMessage({ channel: 'system', sender: '系统', content: `找不到${npcName}。` });
+        return;
+      }
+
+      // 切磋
+      if (cmd.startsWith('spar ') || raw.startsWith('切磋 ') || raw.startsWith('比武 ')) {
+        const npcName = raw.replace(/^(spar|切磋|比武)\s+/i, '').trim();
+        const npc = findVisibleEntity(npcName);
+        if (npc) return sparWith(npc.id);
+        addMessage({ channel: 'system', sender: '系统', content: `找不到${npcName}。` });
+        return;
+      }
+
+      // 赠送
+      if (cmd.startsWith('gift ') || raw.startsWith('赠送 ') || raw.startsWith('馈赠 ')) {
+        const args = raw.replace(/^(gift|赠送|馈赠)\s+/i, '').trim().split(/\s+/);
+        if (args.length < 2) {
+          addMessage({ channel: 'system', sender: '系统', content: '格式：赠送 <NPC名> <物品名>' });
+          return;
+        }
+        const npcName = args[0];
+        const itemName = args.slice(1).join(' ');
+        const npc = findVisibleEntity(npcName);
+        if (!npc) {
+          addMessage({ channel: 'system', sender: '系统', content: `找不到${npcName}。` });
+          return;
+        }
+        const itemId = char.inventory.find(id =>
+          id.toLowerCase() === itemName.toLowerCase() || ITEMS[id]?.name.toLowerCase().includes(itemName.toLowerCase())
+        );
+        if (!itemId) {
+          addMessage({ channel: 'system', sender: '系统', content: `背包中没有${itemName}。` });
+          return;
+        }
+        return giftToNpc(npc.id, itemId);
       }
 
       if (cmd.startsWith('attack ') || cmd.startsWith('kill ') || raw.startsWith('攻击 ')) {
@@ -2586,6 +2963,13 @@ if(req.minReputation && char.reputation < req.minReputation) {
           return;
         }
         addMessage({ channel: 'say', sender: char.name, content: `${char.name}说："${content}"` });
+        // 广播到房间频道
+        sendChatMsg({
+          uid: char.name,
+          sender: char.name,
+          content: `${char.name}说："${content}"`,
+          channel: 'room',
+        }, char.currentRoomId);
         return;
       }
 
@@ -2644,12 +3028,14 @@ if(req.minReputation && char.reputation < req.minReputation) {
       updateChar(c => {
         let newExp = c.exp + expGain;
         let rl = c.realmLevel;
+        const cap = getRealmLevelCap(c.realm);
         let et = calcExpToNext(c.realm, rl);
-        while (newExp >= et) {
+        while (newExp >= et && rl < cap) {
           newExp -= et;
           rl += 1;
           et = calcExpToNext(c.realm, rl);
         }
+        if (rl >= cap) newExp = 0;
         return {
           hp: Math.min(c.maxHp, c.hp + hpRestore),
           mp: Math.min(c.maxMp, c.mp + mpRestore),
@@ -2712,7 +3098,7 @@ if(req.minReputation && char.reputation < req.minReputation) {
         return;
       }
       const modeName = mode === 'cultivate' ? '挂机修炼' : '挂机打坐';
-      addMessage({ channel: 'system', sender: '挂机', content: `开始${modeName}……（关闭页面后4小时内仍会持续积累）` });
+      addMessage({ channel: 'system', sender: '挂机', content: `开始${modeName}……（关闭页面后24小时内仍会持续积累）` });
       updateChar(() => ({
         cultivationMode: mode,
         cultivationStartMs: Date.now(),
@@ -2882,11 +3268,12 @@ if(req.minReputation && char.reputation < req.minReputation) {
         // 挂机修炼：每秒获得修为经验
         const baseExpPerTick = Math.floor((3 + char.realmLevel * 1.5) * realmMult * ganzhiBonus * 1000);
         updateChar(c => {
+          const cap = getRealmLevelCap(c.realm);
           let newExp = c.exp + baseExpPerTick;
           let rl = c.realmLevel;
           let et = calcExpToNext(c.realm, rl);
-          while (newExp >= et) { newExp -= et; rl += 1; et = calcExpToNext(c.realm, rl); }
-          // 每600秒（10分钟）年龄+1
+          while (newExp >= et && rl < cap) { newExp -= et; rl += 1; et = calcExpToNext(c.realm, rl); }
+          if (rl >= cap) newExp = 0;
           const elapsedSec = Math.floor((Date.now() - c.cultivationStartMs) / 1000);
           const newAge = 16 + Math.floor(elapsedSec / 3600);
           return { exp: newExp, expToNext: et, realmLevel: rl, luohai: Math.min(100, c.luohai + 0.05), age: newAge };
@@ -2946,10 +3333,12 @@ if(req.minReputation && char.reputation < req.minReputation) {
         const elapsedHours = (effectiveMs / (60 * 60 * 1000)).toFixed(1);
         addMessage({ channel: 'system', sender: '离线', content: `离线挂机 ${elapsedHours} 小时，获得 ${totalExp} 修为经验。` });
         updateChar(c => {
+          const cap = getRealmLevelCap(c.realm);
           let newExp = c.exp + totalExp;
           let rl = c.realmLevel;
           let et = calcExpToNext(c.realm, rl);
-          while (newExp >= et) { newExp -= et; rl += 1; et = calcExpToNext(c.realm, rl); }
+          while (newExp >= et && rl < cap) { newExp -= et; rl += 1; et = calcExpToNext(c.realm, rl); }
+          if (rl >= cap) newExp = 0;
           const offlineHours = Math.floor(effectiveMs / (60 * 60 * 1000));
           return { exp: newExp, expToNext: et, realmLevel: rl, lastSaveMs: now, age: c.age + offlineHours };
         });
@@ -3366,25 +3755,15 @@ if(char.inventory.length < 100) {
     // ── 锻造系统 ──────────────────────────────────────────────────────────
     forgeItem: (recipeId: string) => {
       const char = getChar();
-      // Simplified forging - combine materials into equipment
-      const FORGE_RECIPES: Record<string, { name: string; materials: string[]; result: string; goldCost: number }> = {
-        'forge_iron_sword': {
-          name: '锻造铁剑',
-          materials: ['iron_ore', 'iron_ore', 'iron_ore'],
-          result: 'iron_sword',
-          goldCost: 100,
-        },
-        'forge_steel_armor': {
-          name: '锻造钢甲',
-          materials: ['steel_ore', 'steel_ore', 'leather'],
-          result: 'steel_armor',
-          goldCost: 200,
-        },
-      };
-
-      const recipe = FORGE_RECIPES[recipeId];
+      const recipe = FORGE_RECIPE_MAP[recipeId];
       if (!recipe) {
         addMessage({ channel: 'system', sender: '锻造', content: '配方不存在。' });
+        return;
+      }
+
+      // Check level requirement
+      if (char.realmLevel < recipe.requiredLevel) {
+        addMessage({ channel: 'system', sender: '锻造', content: `境界等级不足（需要 Lv.${recipe.requiredLevel}）。` });
         return;
       }
 
@@ -3394,67 +3773,51 @@ if(char.inventory.length < 100) {
         invCounts[id] = (invCounts[id] || 0) + 1;
       });
 
-      for (const mat of recipe.materials) {
-        if ((invCounts[mat] || 0) < 1) {
-          addMessage({ channel: 'system', sender: '锻造', content: `材料不足：${ITEMS[mat]?.name || mat}` });
+      for (const [matId, requiredCount] of Object.entries(recipe.materials)) {
+        if ((invCounts[matId] || 0) < requiredCount) {
+          addMessage({ channel: 'system', sender: '锻造', content: `材料不足：${ITEMS[matId]?.name || matId} 需要 ${requiredCount} 个` });
           return;
         }
       }
 
       // Check gold
       if (char.gold < recipe.goldCost) {
-        addMessage({ channel: 'system', sender: '锻造', content: '金叶不足。' });
+        addMessage({ channel: 'system', sender: '锻造', content: `金叶不足，需要 ${recipe.goldCost} 金叶。` });
         return;
       }
 
       // Consume materials
       let newInv = [...char.inventory];
-      for (const mat of recipe.materials) {
-        const idx = newInv.indexOf(mat);
-        if (idx !== -1) newInv.splice(idx, 1);
+      for (const [matId, requiredCount] of Object.entries(recipe.materials)) {
+        for (let i = 0; i < requiredCount; i++) {
+          const idx = newInv.indexOf(matId);
+          if (idx !== -1) newInv.splice(idx, 1);
+        }
       }
 
       // Add result
-      newInv.push(recipe.result);
+      newInv.push(recipe.resultId);
 
       updateChar(c => ({
         inventory: newInv,
         gold: c.gold - recipe.goldCost,
       }));
 
-      addMessage({ channel: 'system', sender: '锻造', content: `锻造${ITEMS[recipe.result]?.name || recipe.result}成功！` });
+      addMessage({ channel: 'system', sender: '锻造', content: `锻造${ITEMS[recipe.resultId]?.name || recipe.resultId}成功！` });
     },
 
     // ── 炼丹系统 ──────────────────────────────────────────────────────────
     alchemy: (recipeId: string) => {
       const char = getChar();
-      const ALCHEMY_RECIPES: Record<string, { name: string; materials: string[]; result: string; goldCost: number; successRate: number }> = {
-        'health_pill_recipe': {
-          name: '炼制回血丹',
-          materials: ['green_herb', 'green_herb'],
-          result: 'health_pill',
-          goldCost: 20,
-          successRate: 85,
-        },
-        'mp_pill_recipe': {
-          name: '炼制回神丹',
-          materials: ['red_mushroom', 'red_mushroom'],
-          result: 'mp_pill',
-          goldCost: 20,
-          successRate: 85,
-        },
-        'rage_pill_recipe': {
-          name: '炼制狂暴丹',
-          materials: ['green_herb', 'red_mushroom', 'source_crystal'],
-          result: 'rage_pill',
-          goldCost: 50,
-          successRate: 70,
-        },
-      };
-
-      const recipe = ALCHEMY_RECIPES[recipeId];
+      const recipe = ALCHEMY_RECIPE_MAP[recipeId];
       if (!recipe) {
         addMessage({ channel: 'system', sender: '炼丹', content: '配方不存在。' });
+        return;
+      }
+
+      // Check level requirement
+      if (char.realmLevel < recipe.requiredLevel) {
+        addMessage({ channel: 'system', sender: '炼丹', content: `境界等级不足（需要 Lv.${recipe.requiredLevel}）。` });
         return;
       }
 
@@ -3464,31 +3827,33 @@ if(char.inventory.length < 100) {
         invCounts[id] = (invCounts[id] || 0) + 1;
       });
 
-      for (const mat of recipe.materials) {
-        if ((invCounts[mat] || 0) < 1) {
-          addMessage({ channel: 'system', sender: '炼丹', content: `材料不足：${ITEMS[mat]?.name || mat}` });
+      for (const [matId, requiredCount] of Object.entries(recipe.materials)) {
+        if ((invCounts[matId] || 0) < requiredCount) {
+          addMessage({ channel: 'system', sender: '炼丹', content: `材料不足：${ITEMS[matId]?.name || matId} 需要 ${requiredCount} 个` });
           return;
         }
       }
 
       // Check gold
       if (char.gold < recipe.goldCost) {
-        addMessage({ channel: 'system', sender: '炼丹', content: '金叶不足。' });
+        addMessage({ channel: 'system', sender: '炼丹', content: `金叶不足，需要 ${recipe.goldCost} 金叶。` });
         return;
       }
 
       // Consume materials
       let newInv = [...char.inventory];
-      for (const mat of recipe.materials) {
-        const idx = newInv.indexOf(mat);
-        if (idx !== -1) newInv.splice(idx, 1);
+      for (const [matId, requiredCount] of Object.entries(recipe.materials)) {
+        for (let i = 0; i < requiredCount; i++) {
+          const idx = newInv.indexOf(matId);
+          if (idx !== -1) newInv.splice(idx, 1);
+        }
       }
 
       // Check success
-      const success = Math.random() * 100 < recipe.successRate;
+      const success = Math.random() * 100 < recipe.baseSuccessRate;
       if (success) {
-        newInv.push(recipe.result);
-        addMessage({ channel: 'system', sender: '炼丹', content: `炼丹成功！获得${ITEMS[recipe.result]?.name || '丹药'}！` });
+        newInv.push(recipe.resultId);
+        addMessage({ channel: 'system', sender: '炼丹', content: `炼丹成功！获得${ITEMS[recipe.resultId]?.name || '丹药'}！` });
       } else {
         addMessage({ channel: 'system', sender: '炼丹', content: '炼丹失败，材料消耗殆尽。' });
       }

@@ -72,6 +72,27 @@ export function parseCommand(raw: string): {
     return { type: 'social', action: 'talk', target };
   }
 
+  // 观察NPC（增强版）
+  if (cmd === 'inspect' || cmd === '查看' || cmd === 'examine') {
+    const target = parts.slice(1).join(' ') || trimmed.replace(/^(inspect|查看|examine)\s*/i, '');
+    return { type: 'social', action: 'observe', target };
+  }
+
+  // 切磋
+  if (cmd === 'spar' || cmd === '切磋' || cmd === '比武') {
+    const target = parts.slice(1).join(' ') || trimmed.replace(/^(spar|切磋|比武)\s*/i, '');
+    return { type: 'social', action: 'spar', target };
+  }
+
+  // 赠送
+  if (cmd === 'gift' || cmd === '赠送' || cmd === '馈赠') {
+    const args = parts.slice(1);
+    if (args.length < 2) {
+      return { type: 'social', action: 'gift_help' };
+    }
+    return { type: 'social', action: 'gift', target: args[0], args: [args.slice(1).join(' ')] };
+  }
+
   // 使用物品
   if (cmd === 'use' || cmd === 'eat' || cmd === '使用' || cmd === '服用') {
     const target = parts.slice(1).join(' ') || trimmed.replace(/^(use|eat|使用|服用)\s*/i, '');

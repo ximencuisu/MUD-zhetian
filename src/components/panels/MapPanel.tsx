@@ -105,6 +105,15 @@ export default function MapPanel() {
                     strokeWidth={isCurrent ? 1.5 : 1}
                     style={isCurrent ? { filter: 'drop-shadow(0 0 4px rgba(139,119,42,0.4))' } : {}}
                   />
+                  {isCurrent && (
+                    <circle
+                      cx={p.x + NODE_W / 2 - 4}
+                      cy={p.y - NODE_H / 2 + 4}
+                      r={3}
+                      fill="#ff0000"
+                      style={{ filter: 'drop-shadow(0 0 2px #ff0000)' }}
+                    />
+                  )}
                   <text
                     x={p.x} y={p.y + 1}
                     textAnchor="middle"

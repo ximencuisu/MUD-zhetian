@@ -393,6 +393,436 @@ export const NEW_NPCS: Record<string, NPC> = {
     level: 70,
     realm: '大圣',
   },
+
+  // ──────────────────────────────────────────────
+  // 隐世高手NPC
+  // ──────────────────────────────────────────────
+  hidden_sword_master: {
+    id: 'hidden_sword_master',
+    name: '隐世剑仙·青莲',
+    description: '传说中的剑仙，隐居于古林深处。他的剑术已臻化境，一剑可破万法。',
+    dialogue: [
+      '（老者睁开双眼，剑气纵横）',
+      '你的剑意尚浅，需要更多磨砺。',
+      '剑道在于心，心到则剑到。',
+      '若你能接住我三招，便传你一式绝学。',
+    ],
+    isHostile: false, hp: 99999, maxHp: 99999, attack: 0, defense: 0,
+    expReward: 0, goldReward: 0, drops: [], level: 80,
+    realm: '大圣',
+  },
+
+  hidden_alchemy_sage: {
+    id: 'hidden_alchemy_sage',
+    name: '丹道圣手·药老',
+    description: '炼丹界的传奇人物，据说能炼制出起死回生的神丹。他云游四方，寻找有缘弟子。',
+    dialogue: [
+      '年轻人，你对丹道有兴趣？',
+      '炼丹之道，在于火候与药材的完美配合。',
+      '我这里有一些珍稀配方，若你有缘，便传于你。',
+      '丹道的最高境界，是以天地为炉，以万物为药。',
+    ],
+    isHostile: false, hp: 99999, maxHp: 99999, attack: 0, defense: 0,
+    expReward: 0, goldReward: 0, drops: [], level: 90,
+    realm: '准帝',
+  },
+
+  hidden_array_master: {
+    id: 'hidden_array_master',
+    name: '阵道宗师·玄机子',
+    description: '精通天下阵法的奇人，据说能以阵法困住大圣级别的强者。',
+    dialogue: [
+      '阵法之道，博大精深。',
+      '一阵在手，可敌千军。',
+      '你的阵法天赋不错，若有兴趣，可随我学习。',
+      '天下阵法，皆出同源，悟透根源，万阵皆通。',
+    ],
+    isHostile: false, hp: 99999, maxHp: 99999, attack: 0, defense: 0,
+    expReward: 0, goldReward: 0, drops: [], level: 85,
+    realm: '大圣',
+  },
+
+  // ──────────────────────────────────────────────
+  // 特殊商人NPC
+  // ──────────────────────────────────────────────
+  mount_merchant: {
+    id: 'mount_merchant',
+    name: '坐骑商人·龙马',
+    description: '专门经营坐骑的商人，据说与龙族有渊源。他的坐骑都是精心培育的良驹。',
+    dialogue: [
+      '欢迎光临龙马阁！这里的坐骑都是精心培育的良驹。',
+      '好的坐骑能大大提升修炼者的移动速度和战斗力。',
+      '坐骑需要精心喂养，才能发挥最大潜力。',
+      '高级坐骑可遇不可求，需要缘分。',
+    ],
+    isHostile: false, hp: 9999, maxHp: 9999, attack: 0, defense: 0,
+    expReward: 0, goldReward: 0, drops: [], level: 50,
+    realm: '化龙秘境',
+    shop: 'mount_shop',
+  },
+
+  pet_merchant: {
+    id: 'pet_merchant',
+    name: '灵宠商人·小凤',
+    description: '一位可爱的少女，专门经营灵宠。她对灵宠极为了解，能与灵宠心灵相通。',
+    dialogue: [
+      '欢迎来到灵宠乐园！这里的灵宠都很可爱哦！',
+      '灵宠可以帮你战斗，也可以陪伴你修炼。',
+      '灵宠需要喂养和训练，才能变得更强。',
+      '每只灵宠都有独特的技能，要好好培养。',
+    ],
+    isHostile: false, hp: 9999, maxHp: 9999, attack: 0, defense: 0,
+    expReward: 0, goldReward: 0, drops: [], level: 40,
+    realm: '四极秘境',
+    shop: 'pet_shop',
+  },
+
+  material_merchant: {
+    id: 'material_merchant',
+    name: '材料商人·铁锤',
+    description: '一位粗犷的大汉，专门经营各种修炼材料。他的材料都是亲自采集的上品。',
+    dialogue: [
+      '嘿！需要什么材料？我这里应有尽有！',
+      '源石、源晶、龙血，只要你出得起价！',
+      '材料的品质很重要，差的材料炼不出好东西。',
+      '大批量购买有优惠哦！',
+    ],
+    isHostile: false, hp: 9999, maxHp: 9999, attack: 0, defense: 0,
+    expReward: 0, goldReward: 0, drops: [], level: 30,
+    realm: '道宫秘境',
+    shop: 'material_shop',
+  },
+
+  // ──────────────────────────────────────────────
+  // 剧情NPC
+  // ──────────────────────────────────────────────
+  guide_elder: {
+    id: 'guide_elder',
+    name: '引路老人',
+    description: '归元村的长者，引导初入修炼之路的年轻人。他似乎知道很多关于修炼界的事情。',
+    dialogue: [
+      '年轻人，你终于踏上了修炼之路。',
+      '修炼之道，贵在坚持。不要急于求成。',
+      '先去东荒旷野历练一番，熟悉战斗。',
+      '等你实力足够了，可以去太玄门拜师。',
+    ],
+    isHostile: false, hp: 9999, maxHp: 9999, attack: 0, defense: 0,
+    expReward: 0, goldReward: 0, drops: [], level: 99,
+    realm: '（不可测）',
+  },
+
+  herb_boy: {
+    id: 'herb_boy',
+    name: '药童·小草',
+    description: '药师的学徒，进山采药时被妖兽围困。他虽然修为不高，但对草药极为了解。',
+    dialogue: [
+      '谢谢您救了我！这些妖兽太可怕了。',
+      '我是药师的学徒，进山采药时迷路了。',
+      '这些灵草是我采的，送给您作为感谢。',
+      '师父说修炼需要灵药辅助，您需要什么药？',
+    ],
+    isHostile: false, hp: 200, maxHp: 200, attack: 10, defense: 5,
+    expReward: 0, goldReward: 0, drops: [], level: 5,
+    realm: '轮海秘境',
+  },
+
+  wandering_swordsman: {
+    id: 'wandering_swordsman',
+    name: '流浪剑客·风无痕',
+    description: '一位流浪天下的剑客，剑术高超，性格孤傲。他似乎在寻找某个人。',
+    dialogue: [
+      '在下风无痕，四处游历，寻找剑道真谛。',
+      '剑者，当以剑心通明，一剑破万法。',
+      '你若有兴趣，可与我切磋几招。',
+      '山贼为祸百姓，正合我意，一起去除了他们！',
+    ],
+    isHostile: false, hp: 5000, maxHp: 5000, attack: 200, defense: 100,
+    expReward: 0, goldReward: 0, drops: [], level: 25,
+    realm: '道宫秘境',
+  },
+
+  sect_leader: {
+    id: 'sect_leader',
+    name: '太玄门掌门·玄天',
+    description: '太玄门的掌门人，修为通天，德高望重。他统领太玄门数百年，培养了无数强者。',
+    dialogue: [
+      '年轻人，你来太玄门有何事？',
+      '太玄门以道为本，以德为先。',
+      '门派之间的纷争，需要用智慧来解决。',
+      '若你有心向道，可拜入太玄门下。',
+    ],
+    isHostile: false, hp: 999999, maxHp: 999999, attack: 0, defense: 0,
+    expReward: 0, goldReward: 0, drops: [], level: 100,
+    realm: '准帝',
+  },
+
+  dragon_elder: {
+    id: 'dragon_elder',
+    name: '龙族长老·烛龙',
+    description: '龙族的长老，据说活了数万年。他掌握着龙族的古老秘密。',
+    dialogue: [
+      '（龙族长老睁开双眼，龙威四溢）',
+      '年轻人，你体内的龙脉已经觉醒。',
+      '化龙之道，在于血脉与意志的融合。',
+      '收集足够的龙血，你就能真正化龙。',
+    ],
+    isHostile: false, hp: 999999, maxHp: 999999, attack: 0, defense: 0,
+    expReward: 0, goldReward: 0, drops: [], level: 100,
+    realm: '大圣',
+  },
+
+  // ──────────────────────────────────────────────
+  // 门派NPC
+  // ──────────────────────────────────────────────
+  taixuan_senior_disciple: {
+    id: 'taixuan_senior_disciple',
+    name: '太玄门大师兄·剑心',
+    description: '太玄门的大师兄，修为高深，为人正直。他是所有师弟师妹的榜样。',
+    dialogue: [
+      '师弟/师妹，有什么需要帮忙的吗？',
+      '修炼之道，贵在持之以恒。',
+      '切磋是提升实力的好方法，来吧！',
+      '门派试炼即将开始，准备好迎接挑战了吗？',
+    ],
+    isHostile: false, hp: 10000, maxHp: 10000, attack: 300, defense: 200,
+    expReward: 0, goldReward: 0, drops: [], level: 40,
+    realm: '化龙秘境',
+  },
+
+  outer_door_disciple: {
+    id: 'outer_door_disciple',
+    name: '太玄门外门弟子',
+    description: '太玄门的外门弟子，负责看守山门。他虽然修为不高，但对门派极为忠诚。',
+    dialogue: [
+      '站住！你是来拜师的吗？',
+      '太玄门是东荒最大的门派之一。',
+      '想要加入太玄门，需要通过入门考核。',
+      '山门内禁止喧哗，请保持安静。',
+    ],
+    isHostile: false, hp: 1000, maxHp: 1000, attack: 50, defense: 30,
+    expReward: 0, goldReward: 0, drops: [], level: 15,
+    realm: '苦海秘境',
+  },
+
+  inner_elder: {
+    id: 'inner_elder',
+    name: '太玄门内门长老',
+    description: '太玄门的内门长老，负责教导内门弟子。他修为深厚，学识渊博。',
+    dialogue: [
+      '年轻人，你来找我有何事？',
+      '突破境界需要足够的积累和机缘。',
+      '源石是突破的关键材料，要多收集。',
+      '修炼之道，在于悟性与勤奋的结合。',
+    ],
+    isHostile: false, hp: 50000, maxHp: 50000, attack: 0, defense: 0,
+    expReward: 0, goldReward: 0, drops: [], level: 60,
+    realm: '仙台秘境',
+  },
+
+  daogong_elder: {
+    id: 'daogong_elder',
+    name: '道宫长老',
+    description: '专门指导道宫境界修炼的长老，对道宫的奥秘了如指掌。',
+    dialogue: [
+      '道宫境界，是修炼的重要转折点。',
+      '道宫的开辟需要大量的道源石。',
+      '道宫之内，蕴含着天地大道的奥秘。',
+      '突破道宫后，你的实力将大幅提升。',
+    ],
+    isHostile: false, hp: 80000, maxHp: 80000, attack: 0, defense: 0,
+    expReward: 0, goldReward: 0, drops: [], level: 70,
+    realm: '仙台秘境',
+  },
+
+  // ──────────────────────────────────────────────
+  // 世界NPC
+  // ──────────────────────────────────────────────
+  mysterious_old_man: {
+    id: 'mysterious_old_man',
+    name: '神秘老者',
+    description: '一位行踪不定的神秘老者，总是在关键时刻出现。他的身份成谜，实力深不可测。',
+    dialogue: [
+      '（老者微微一笑）年轻人，我们又见面了。',
+      '修炼之路，充满了未知与挑战。',
+      '保持本心，方能走得更远。',
+      '（老者说完便消失不见了）',
+    ],
+    isHostile: false, hp: 999999, maxHp: 999999, attack: 0, defense: 0,
+    expReward: 0, goldReward: 0, drops: [], level: 99,
+    realm: '（不可测）',
+  },
+
+  wandering_merchant: {
+    id: 'wandering_merchant',
+    name: '流浪商人',
+    description: '一位四处游历的商人，他的货物种类繁多，价格公道。',
+    dialogue: [
+      '客官，需要些什么？我这里什么都有！',
+      '刚从外地进货，有很多新鲜玩意儿。',
+      '价格好商量，老顾客有优惠。',
+      '下次再来，我给您留好货。',
+    ],
+    isHostile: false, hp: 9999, maxHp: 9999, attack: 0, defense: 0,
+    expReward: 0, goldReward: 0, drops: [], level: 30,
+    realm: '道宫秘境',
+    shop: 'wandering_shop',
+  },
+
+  fortune_teller: {
+    id: 'fortune_teller',
+    name: '算命先生·天机子',
+    description: '自称能窥探天机的算命先生，他的预言有时奇准无比。',
+    dialogue: [
+      '年轻人，要算一卦吗？',
+      '我看你印堂发亮，近日必有好运。',
+      '修炼之道，天时地利人和缺一不可。',
+      '小心近日的劫难，但不必害怕，自有贵人相助。',
+    ],
+    isHostile: false, hp: 9999, maxHp: 9999, attack: 0, defense: 0,
+    expReward: 0, goldReward: 0, drops: [], level: 50,
+    realm: '化龙秘境',
+  },
+
+  // ──────────────────────────────────────────────
+  // 敌对NPC（新增怪物）
+  // ──────────────────────────────────────────────
+  wild_beast: {
+    id: 'wild_beast',
+    name: '野兽',
+    description: '东荒旷野中的普通野兽，虽然不强，但数量众多。',
+    dialogue: ['（发出低沉的咆哮）'],
+    isHostile: true, hp: 200, maxHp: 200, attack: 20, defense: 10,
+    expReward: 30, goldReward: 10, drops: ['beast_fur', 'beast_bone'],
+    level: 3,
+    realm: '轮海秘境',
+  },
+
+  bandit: {
+    id: 'bandit',
+    name: '山贼',
+    description: '在山道上打劫的山贼，专门欺负弱小的修炼者。',
+    dialogue: ['此路是我开，此树是我栽，要想从此过，留下买路财！'],
+    isHostile: true, hp: 500, maxHp: 500, attack: 40, defense: 20,
+    expReward: 60, goldReward: 30, drops: ['bandit_sword', 'gold_coin'],
+    level: 8,
+    realm: '轮海秘境',
+  },
+
+  abyss_creature: {
+    id: 'abyss_creature',
+    name: '深渊生物',
+    description: '从深渊裂缝中涌出的虚空生物，形态诡异，力量强大。',
+    dialogue: ['（发出诡异的嘶吼声）'],
+    isHostile: true, hp: 8000, maxHp: 8000, attack: 250, defense: 180,
+    expReward: 500, goldReward: 200, drops: ['void_essence', 'ghost_essence'],
+    level: 45,
+    realm: '化龙秘境',
+  },
+
+  sect_enemy: {
+    id: 'sect_enemy',
+    name: '敌对门派弟子',
+    description: '敌对门派的弟子，在门派大战中出现。',
+    dialogue: ['你们太玄门的时代结束了！'],
+    isHostile: true, hp: 5000, maxHp: 5000, attack: 180, defense: 120,
+    expReward: 300, goldReward: 150, drops: ['sect_honor_medal', 'source_crystal'],
+    level: 35,
+    realm: '四极秘境',
+  },
+
+  immortal_competitor: {
+    id: 'immortal_competitor',
+    name: '仙路竞争者',
+    description: '来自各方势力的强者，都在争夺仙路的入场资格。',
+    dialogue: ['仙路只属于最强者！'],
+    isHostile: true, hp: 15000, maxHp: 15000, attack: 400, defense: 300,
+    expReward: 800, goldReward: 400, drops: ['immortal_token', 'source_crystal'],
+    level: 55,
+    realm: '仙台秘境',
+  },
+
+  heaven_trial_enemy: {
+    id: 'heaven_trial_enemy',
+    name: '天道试炼者',
+    description: '天道降下的试炼敌人，实力强大，不可轻敌。',
+    dialogue: ['（天道之力凝聚成形）'],
+    isHostile: true, hp: 20000, maxHp: 20000, attack: 500, defense: 350,
+    expReward: 1000, goldReward: 500, drops: ['heaven_essence', 'scripture_shard_rare'],
+    level: 60,
+    realm: '仙台秘境',
+  },
+
+  race_enemy: {
+    id: 'race_enemy',
+    name: '异族战士',
+    description: '来自异族的强大战士，实力不容小觑。',
+    dialogue: ['（异族语言：消灭人类！）'],
+    isHostile: true, hp: 25000, maxHp: 25000, attack: 600, defense: 400,
+    expReward: 1200, goldReward: 600, drops: ['race_trophy', 'demon_beast_core'],
+    level: 65,
+    realm: '仙台秘境',
+  },
+
+  // ── 任务需要的NPC ──
+  sect_elder: {
+    id: 'sect_elder',
+    name: '门派长老',
+    description: '门派中的资深长老，负责处理门派内外事务。他德高望重，深受弟子敬仰。',
+    dialogue: [
+      '年轻人，你来找老夫有何事？',
+      '门派的荣耀需要每一位弟子来维护。',
+      '若有叛徒出现，必须立即清除。',
+      '门派的未来掌握在你们手中。',
+    ],
+    isHostile: false, hp: 50000, maxHp: 50000, attack: 0, defense: 0,
+    expReward: 0, goldReward: 0, drops: [], level: 70,
+    realm: '仙台秘境',
+  },
+
+  sect_quest_master: {
+    id: 'sect_quest_master',
+    name: '门派任务长老',
+    description: '负责发布门派日常任务的长老，每天都有新的任务等待完成。',
+    dialogue: [
+      '今日的门派任务已经准备好了。',
+      '完成任务可以获得门派贡献和声望。',
+      '每日任务会在凌晨重置，请及时完成。',
+      '组队完成任务可获得额外奖励。',
+    ],
+    isHostile: false, hp: 20000, maxHp: 20000, attack: 0, defense: 0,
+    expReward: 0, goldReward: 0, drops: [], level: 50,
+    realm: '化龙秘境',
+  },
+
+  mount_master: {
+    id: 'mount_master',
+    name: '坐骑管理员',
+    description: '专门负责坐骑照料和训练的管理员，对各种坐骑了如指掌。',
+    dialogue: [
+      '欢迎来到坐骑管理处！',
+      '坐骑需要定期喂养和训练，才能保持最佳状态。',
+      '好的坐骑能大大提升你的移动速度。',
+      '坐骑进化需要特定的材料，要提前准备好。',
+    ],
+    isHostile: false, hp: 5000, maxHp: 5000, attack: 0, defense: 0,
+    expReward: 0, goldReward: 0, drops: [], level: 30,
+    realm: '道宫秘境',
+  },
+
+  pet_master: {
+    id: 'pet_master',
+    name: '灵宠训练师',
+    description: '专门负责灵宠训练的师傅，能帮助灵宠提升实力。',
+    dialogue: [
+      '欢迎来到灵宠训练场！',
+      '灵宠可以通过训练来提升等级和技能。',
+      '每只灵宠都有独特的天赋，要善于培养。',
+      '灵宠进化后会变得更强，但需要特定材料。',
+    ],
+    isHostile: false, hp: 5000, maxHp: 5000, attack: 0, defense: 0,
+    expReward: 0, goldReward: 0, drops: [], level: 30,
+    realm: '道宫秘境',
+  },
 };
 
 export default NEW_NPCS;

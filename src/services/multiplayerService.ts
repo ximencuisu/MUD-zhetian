@@ -43,10 +43,30 @@ export interface ChatMsg {
   sender: string;
   content: string;
   timestamp: number;
-  channel: 'world' | 'room' | 'system' | 'private';
+  channel: 'world' | 'room' | 'system' | 'private' | 'sect' | 'team';
   roomId?: string;
+  sectId?: string;
+  partyId?: string;
   toUid?: string;
   toName?: string;
+}
+
+// ── 聊天频率限制 ──
+const CHAT_RATE_LIMIT = 3; // 3秒内最多发送N条
+const CHAT_RATE_WINDOW = 3000; // 3秒窗口
+const chatTimestamps: number[] = [];
+
+export function canSendChat(): boolean {
+  const now = Date.now();
+  // 清理过期的时间戳
+  while (chatTimestamps.length > 0 && chatTimestamps[0] < now - CHAT_RATE_WINDOW) {
+    chatTimestamps.shift();
+  }
+  return chatTimestamps.length < CHAT_RATE_LIMIT;
+}
+
+export function recordChatSent(): void {
+  chatTimestamps.push(Date.now());
 }
 
 export interface FriendData {
@@ -157,25 +177,40 @@ export function listenPlayers(cb: (players: OnlinePlayer[]) => void): Unsub {
 
 // ── Chat ───────────────────────────────────────────────────────────────────
 
-const MAX_MSGS = 80;
+const MAX_MSGS = 150;
 
 function chatRef(channel: 'world' | 'system'): DatabaseReference;
 function chatRef(channel: 'room', roomId: string): DatabaseReference;
 function chatRef(channel: 'private', convId: string): DatabaseReference;
+function chatRef(channel: 'sect', sectId: string): DatabaseReference;
+function chatRef(channel: 'team', partyId: string): DatabaseReference;
 function chatRef(channel: string, param?: string): DatabaseReference {
   if (!db) throw new Error('DB not ready');
   if (channel === 'room') return ref(db, `chat/room/${param}`);
   if (channel === 'private') return ref(db, `chat/private/${param}`);
+  if (channel === 'sect') return ref(db, `chat/sect/${param}`);
+  if (channel === 'team') return ref(db, `chat/team/${param}`);
   return ref(db, `chat/${channel}`);
 }
 
 export function sendChatMsg(msg: Omit<ChatMsg, 'id' | 'timestamp'>, roomId?: string) {
   if (!CONFIGURED || !db) return;
+  if (!canSendChat()) return; // 频率限制
   try {
-    const r = msg.channel === 'room' ? chatRef('room', roomId!) 
-      : msg.channel === 'private' ? chatRef('private', getPrivateConvId(msg.uid!, msg.toUid!))
-      : chatRef(msg.channel as 'world' | 'system');
+    let r: DatabaseReference;
+    if (msg.channel === 'room') {
+      r = chatRef('room', roomId!);
+    } else if (msg.channel === 'private') {
+      r = chatRef('private', getPrivateConvId(msg.uid!, msg.toUid!));
+    } else if (msg.channel === 'sect' && msg.sectId) {
+      r = chatRef('sect', msg.sectId);
+    } else if (msg.channel === 'team' && msg.partyId) {
+      r = chatRef('team', msg.partyId);
+    } else {
+      r = chatRef(msg.channel as 'world' | 'system');
+    }
     push(r, { ...msg, timestamp: serverTimestamp() });
+    recordChatSent();
   } catch {
     return;
   }
@@ -199,6 +234,16 @@ export function listenChat(
   cb: (msgs: ChatMsg[]) => void,
   convId: string,
 ): Unsub;
+export function listenChat(
+  channel: 'sect',
+  cb: (msgs: ChatMsg[]) => void,
+  sectId: string,
+): Unsub;
+export function listenChat(
+  channel: 'team',
+  cb: (msgs: ChatMsg[]) => void,
+  partyId: string,
+): Unsub;
 export function listenChat(channel: string, cb: (msgs: ChatMsg[]) => void, param?: string): Unsub {
   if (!CONFIGURED || !db) return () => {};
   try {
@@ -207,7 +252,9 @@ export function listenChat(channel: string, cb: (msgs: ChatMsg[]) => void, param
     else if (channel === 'private') {
       const [uid1, uid2] = param!.split('_');
       r = chatRef('private', getPrivateConvId(uid1, uid2));
-    } else r = chatRef(channel as 'world' | 'system');
+    } else if (channel === 'sect') r = chatRef('sect', param!);
+    else if (channel === 'team') r = chatRef('team', param!);
+    else r = chatRef(channel as 'world' | 'system');
     onValue(r, snap => {
       const val = snap.val() || {};
       const msgs: ChatMsg[] = Object.entries(val).map(([id, v]) => ({ id, ...(v as ChatMsg) }));

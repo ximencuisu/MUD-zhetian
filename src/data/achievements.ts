@@ -212,6 +212,294 @@ export const ACHIEVEMENTS: Record<string, Achievement> = {
     rewards: { exp: 8000, gold: 5000, title: '异象大师' },
     hidden: true,
   },
+
+  // ── 新增战斗成就 ──
+  monster_slayer: {
+    id: 'monster_slayer',
+    name: '千人斩',
+    description: '击败1000个敌人',
+    category: 'combat',
+    icon: '⚔️',
+    conditions: [
+      { type: 'kill', target: 'any', count: 1000, description: '击败1000个敌人' },
+    ],
+    rewards: { exp: 20000, gold: 10000, title: '千人斩' },
+    hidden: false,
+  },
+  boss_hunter: {
+    id: 'boss_hunter',
+    name: 'Boss猎人',
+    description: '击败50个世界Boss',
+    category: 'combat',
+    icon: '🎯',
+    conditions: [
+      { type: 'kill', target: 'world_boss', count: 50, description: '击败50个世界Boss' },
+    ],
+    rewards: { exp: 15000, gold: 8000, title: 'Boss猎人' },
+    hidden: false,
+  },
+  pvp_legend: {
+    id: 'pvp_legend',
+    name: '竞技传说',
+    description: '在竞技场中获得500场胜利',
+    category: 'combat',
+    icon: '🏆',
+    conditions: [
+      { type: 'pvp', target: 'win', count: 500, description: 'PVP胜利500场' },
+    ],
+    rewards: { exp: 30000, gold: 15000, title: '竞技传说' },
+    hidden: false,
+  },
+
+  // ── 新增探索成就 ──
+  world_traveler: {
+    id: 'world_traveler',
+    name: '世界旅行者',
+    description: '探索所有区域',
+    category: 'exploration',
+    icon: '🌍',
+    conditions: [
+      { type: 'exploration', target: 'zone', count: 20, description: '探索20个区域' },
+    ],
+    rewards: { exp: 5000, gold: 3000, title: '世界旅行者' },
+    hidden: false,
+  },
+  secret_finder: {
+    id: 'secret_finder',
+    name: '秘境发现者',
+    description: '发现5个隐藏地点',
+    category: 'exploration',
+    icon: '🔍',
+    conditions: [
+      { type: 'exploration', target: 'hidden', count: 5, description: '发现5个隐藏地点' },
+    ],
+    rewards: { exp: 3000, gold: 2000, title: '秘境发现者' },
+    hidden: false,
+  },
+  dungeon_king: {
+    id: 'dungeon_king',
+    name: '副本之王',
+    description: '通关所有副本10次',
+    category: 'exploration',
+    icon: '👑',
+    conditions: [
+      { type: 'dungeon', target: 'all', count: 120, description: '通关副本120次' },
+    ],
+    rewards: { exp: 20000, gold: 10000, title: '副本之王' },
+    hidden: false,
+  },
+
+  // ── 新增社交成就 ──
+  best_friend: {
+    id: 'best_friend',
+    name: '挚友',
+    description: '拥有100个好友',
+    category: 'social',
+    icon: '💕',
+    conditions: [
+      { type: 'friend', target: 'any', count: 100, description: '拥有100个好友' },
+    ],
+    rewards: { exp: 5000, gold: 3000, title: '挚友' },
+    hidden: false,
+  },
+  guild_contributor: {
+    id: 'guild_contributor',
+    name: '帮派功臣',
+    description: '为帮派贡献10000点',
+    category: 'social',
+    icon: '🏅',
+    conditions: [
+      { type: 'guild', target: 'contribution', count: 10000, description: '帮派贡献10000点' },
+    ],
+    rewards: { exp: 8000, gold: 5000, title: '帮派功臣' },
+    hidden: false,
+  },
+  team_player: {
+    id: 'team_player',
+    name: '最佳队友',
+    description: '组队完成100次副本',
+    category: 'social',
+    icon: '🤝',
+    conditions: [
+      { type: 'dungeon', target: 'party', count: 100, description: '组队通关100次' },
+    ],
+    rewards: { exp: 10000, gold: 6000, title: '最佳队友' },
+    hidden: false,
+  },
+
+  // ── 新增收集成就 ──
+  equipment_collector: {
+    id: 'equipment_collector',
+    name: '装备收藏家',
+    description: '收集50种不同的装备',
+    category: 'collection',
+    icon: '🗡️',
+    conditions: [
+      { type: 'item', target: 'equipment', count: 50, description: '收集50种装备' },
+    ],
+    rewards: { exp: 8000, gold: 5000, title: '装备收藏家' },
+    hidden: false,
+  },
+  mount_collector: {
+    id: 'mount_collector',
+    name: '坐骑收藏家',
+    description: '收集所有坐骑',
+    category: 'collection',
+    icon: '🐎',
+    conditions: [
+      { type: 'item', target: 'mount', count: 8, description: '收集8种坐骑' },
+    ],
+    rewards: { exp: 10000, gold: 6000, title: '坐骑收藏家' },
+    hidden: false,
+  },
+  pet_collector: {
+    id: 'pet_collector',
+    name: '灵宠收藏家',
+    description: '收集所有灵宠',
+    category: 'collection',
+    icon: '🐾',
+    conditions: [
+      { type: 'item', target: 'pet', count: 7, description: '收集7种灵宠' },
+    ],
+    rewards: { exp: 10000, gold: 6000, title: '灵宠收藏家' },
+    hidden: false,
+  },
+  scripture_master: {
+    id: 'scripture_master',
+    name: '经文大师',
+    description: '收集100个经文碎片',
+    category: 'collection',
+    icon: '📜',
+    conditions: [
+      { type: 'item', target: 'scripture_shard', count: 100, description: '收集100个经文碎片' },
+    ],
+    rewards: { exp: 15000, gold: 8000, title: '经文大师' },
+    hidden: false,
+  },
+  billionaire: {
+    id: 'billionaire',
+    name: '亿万富翁',
+    description: '拥有1000万金叶',
+    category: 'collection',
+    icon: '💎',
+    conditions: [
+      { type: 'gold', target: 'any', count: 10000000, description: '拥有1000万金叶' },
+    ],
+    rewards: { exp: 50000, gold: 200000, title: '亿万富翁' },
+    hidden: false,
+  },
+
+  // ── 新增修炼成就 ──
+  cultivation_grandmaster: {
+    id: 'cultivation_grandmaster',
+    name: '修炼宗师',
+    description: '达到大圣境界',
+    category: 'cultivation',
+    icon: '🔥',
+    conditions: [
+      { type: 'realm', target: 'great_sage', count: 1, description: '达到大圣境界' },
+    ],
+    rewards: { exp: 50000, gold: 25000, title: '修炼宗师' },
+    hidden: false,
+  },
+  skill_master: {
+    id: 'skill_master',
+    name: '技能大师',
+    description: '学会30种不同的技能',
+    category: 'cultivation',
+    icon: '📖',
+    conditions: [
+      { type: 'skill', target: 'any', count: 30, description: '学会30种技能' },
+    ],
+    rewards: { exp: 15000, gold: 8000, title: '技能大师' },
+    hidden: false,
+  },
+  alchemy_grandmaster: {
+    id: 'alchemy_grandmaster',
+    name: '炼丹宗师',
+    description: '炼丹等级达到50级',
+    category: 'cultivation',
+    icon: '⚗️',
+    conditions: [
+      { type: 'special', target: 'alchemy_level', count: 50, description: '炼丹等级达到50' },
+    ],
+    rewards: { exp: 12000, gold: 6000, title: '炼丹宗师' },
+    hidden: false,
+  },
+  crafting_grandmaster: {
+    id: 'crafting_grandmaster',
+    name: '炼器宗师',
+    description: '炼器等级达到50级',
+    category: 'cultivation',
+    icon: '🔨',
+    conditions: [
+      { type: 'special', target: 'crafting_level', count: 50, description: '炼器等级达到50' },
+    ],
+    rewards: { exp: 12000, gold: 6000, title: '炼器宗师' },
+    hidden: false,
+  },
+
+  // ── 新增特殊成就 ──
+  emperor_slayer: {
+    id: 'emperor_slayer',
+    name: '弑帝者',
+    description: '击败古皇残念',
+    category: 'special',
+    icon: '👑',
+    conditions: [
+      { type: 'kill', target: 'world_boss_emperor_ghost', count: 1, description: '击败古皇残念' },
+    ],
+    rewards: { exp: 20000, gold: 10000, title: '弑帝者' },
+    hidden: false,
+  },
+  phoenix_born: {
+    id: 'phoenix_born',
+    name: '凤凰涅槃',
+    description: '击败凤凰',
+    category: 'special',
+    icon: '🔥',
+    conditions: [
+      { type: 'kill', target: 'world_boss_phoenix', count: 1, description: '击败凤凰' },
+    ],
+    rewards: { exp: 25000, gold: 12000, title: '凤凰涅槃' },
+    hidden: false,
+  },
+  void_walker: {
+    id: 'void_walker',
+    name: '虚空行者',
+    description: '击败深渊魔主',
+    category: 'special',
+    icon: '🌀',
+    conditions: [
+      { type: 'kill', target: 'abyss_boss', count: 1, description: '击败深渊魔主' },
+    ],
+    rewards: { exp: 30000, gold: 15000, title: '虚空行者' },
+    hidden: true,
+  },
+  destiny_chosen: {
+    id: 'destiny_chosen',
+    name: '天命之子',
+    description: '完成所有主线任务',
+    category: 'special',
+    icon: '✨',
+    conditions: [
+      { type: 'quest', target: 'main', count: 20, description: '完成20个主线任务' },
+    ],
+    rewards: { exp: 100000, gold: 50000, title: '天命之子' },
+    hidden: false,
+  },
+  perfect_cultivator: {
+    id: 'perfect_cultivator',
+    name: '完美修炼者',
+    description: '所有属性达到1000',
+    category: 'special',
+    icon: '💫',
+    conditions: [
+      { type: 'special', target: 'all_stats_1000', count: 1, description: '所有属性达到1000' },
+    ],
+    rewards: { exp: 200000, gold: 100000, title: '完美修炼者' },
+    hidden: true,
+  },
 };
 
 // ── 成就管理器 ──
@@ -455,6 +743,119 @@ export const TITLES: Record<string, Title> = {
       { type: 'defense', value: 80, isPercent: false },
     ],
     source: '创建帮派',
+  },
+
+  // ── 新增称号 ──
+  monster_slayer: {
+    id: 'monster_slayer',
+    name: '千人斩',
+    description: '击败1000个敌人的绝世强者',
+    icon: '⚔️',
+    color: '#E91E63',
+    effects: [
+      { type: 'attack', value: 200, isPercent: false },
+      { type: 'critRate', value: 10, isPercent: false },
+    ],
+    source: '成就：千人斩',
+  },
+  boss_hunter: {
+    id: 'boss_hunter',
+    name: 'Boss猎人',
+    description: '击败50个世界Boss的传奇',
+    icon: '🎯',
+    color: '#FF5722',
+    effects: [
+      { type: 'attack', value: 150, isPercent: false },
+      { type: 'expBonus', value: 15, isPercent: true },
+    ],
+    source: '成就：Boss猎人',
+  },
+  world_traveler: {
+    id: 'world_traveler',
+    name: '世界旅行者',
+    description: '探索过所有区域的冒险家',
+    icon: '🌍',
+    color: '#4CAF50',
+    effects: [
+      { type: 'dodge', value: 15, isPercent: false },
+      { type: 'goldBonus', value: 10, isPercent: true },
+    ],
+    source: '成就：世界旅行者',
+  },
+  equipment_collector: {
+    id: 'equipment_collector',
+    name: '装备收藏家',
+    description: '收集50种不同装备的收藏家',
+    icon: '🗡️',
+    color: '#9C27B0',
+    effects: [
+      { type: 'defense', value: 100, isPercent: false },
+      { type: 'hp', value: 300, isPercent: false },
+    ],
+    source: '成就：装备收藏家',
+  },
+  cultivation_grandmaster: {
+    id: 'cultivation_grandmaster',
+    name: '修炼宗师',
+    description: '达到大圣境界的绝世强者',
+    icon: '🔥',
+    color: '#FF9800',
+    effects: [
+      { type: 'attack', value: 300, isPercent: false },
+      { type: 'defense', value: 200, isPercent: false },
+      { type: 'hp', value: 1500, isPercent: false },
+    ],
+    source: '成就：修炼宗师',
+  },
+  destiny_chosen: {
+    id: 'destiny_chosen',
+    name: '天命之子',
+    description: '完成所有主线任务的天选之人',
+    icon: '✨',
+    color: '#FFD700',
+    effects: [
+      { type: 'attack', value: 250, isPercent: false },
+      { type: 'defense', value: 200, isPercent: false },
+      { type: 'hp', value: 1000, isPercent: false },
+      { type: 'expBonus', value: 20, isPercent: true },
+    ],
+    source: '成就：天命之子',
+  },
+  emperor_slayer: {
+    id: 'emperor_slayer',
+    name: '弑帝者',
+    description: '击败古皇残念的传奇',
+    icon: '👑',
+    color: '#F44336',
+    effects: [
+      { type: 'attack', value: 180, isPercent: false },
+      { type: 'critRate', value: 8, isPercent: false },
+    ],
+    source: '成就：弑帝者',
+  },
+  phoenix_born: {
+    id: 'phoenix_born',
+    name: '凤凰涅槃',
+    description: '击败凤凰的绝世强者',
+    icon: '🔥',
+    color: '#FF5722',
+    effects: [
+      { type: 'attack', value: 200, isPercent: false },
+      { type: 'hp', value: 500, isPercent: false },
+    ],
+    source: '成就：凤凰涅槃',
+  },
+  billionaire: {
+    id: 'billionaire',
+    name: '亿万富翁',
+    description: '坐拥千万金叶的超级富豪',
+    icon: '💎',
+    color: '#FFD700',
+    effects: [
+      { type: 'goldBonus', value: 30, isPercent: true },
+      { type: 'attack', value: 100, isPercent: false },
+    ],
+    source: '成就：亿万富翁',
   },
 };
 

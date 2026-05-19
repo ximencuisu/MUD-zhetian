@@ -125,9 +125,45 @@ export function calcPower(character: Character): number {
   return Math.floor(atkPower + defPower + hpPower + mpPower + critPower + spdPower + realmPower);
 }
 
+// ── 境界等级上限 ──
+export const REALM_LEVEL_CAPS: Record<string, number> = {
+  // 轮海秘境（苦海/命泉/神桥/彼岸各阶段）
+  bitterness_early: 10, bitterness_mid: 10, bitterness_late: 10, bitterness_perfect: 15,
+  spring_early: 10, spring_mid: 10, spring_late: 10, spring_perfect: 15,
+  bridge_early: 10, bridge_mid: 10, bridge_late: 10, bridge_perfect: 15,
+  farshore_early: 10, farshore_mid: 10, farshore_late: 10, farshore_perfect: 15,
+  // 道宫秘境
+  daogong_early: 12, daogong_mid: 12, daogong_late: 12, daogong_perfect: 18,
+  // 四极秘境
+  siji_early: 12, siji_mid: 12, siji_late: 12, siji_perfect: 18,
+  // 化龙秘境（九变）
+  hualong_1: 10, hualong_2: 10, hualong_3: 10, hualong_4: 10,
+  hualong_5: 10, hualong_6: 10, hualong_7: 10, hualong_8: 10, hualong_9: 15,
+  // 仙台秘境
+  xiantai_1: 15, xiantai_2: 15, xiantai_3: 15, xiantai_4: 15, xiantai_5: 15, xiantai_6: 20,
+  // 准帝境
+  zhundi_1: 15, zhundi_2: 15, zhundi_3: 15, zhundi_4: 15, zhundi_5: 15,
+  zhundi_6: 15, zhundi_7: 15, zhundi_8: 15, zhundi_9: 20,
+  // 大帝境
+  dadi_1: 18, dadi_2: 18, dadi_3: 18, dadi_4: 18, dadi_5: 18,
+  dadi_6: 18, dadi_7: 18, dadi_8: 18, dadi_9: 25,
+  // 红尘仙
+  hongchen_xian: 30,
+};
+
 // ── 计算升级所需经验 ──
-export function calcExpToNext(_realm: string, realmLevel: number): number {
-  return Math.floor(80 + realmLevel * 25);
+export function calcExpToNext(realm: string, realmLevel: number): number {
+  // 基础经验随境界指数增长
+  const realmIdx = REALM_ORDER.indexOf(realm);
+  const realmTier = Math.floor(Math.max(0, realmIdx) / 4); // 大境界阶段（0-7）
+  // 基础公式：指数增长 + 等级线性增长
+  const baseExp = Math.floor(80 * Math.pow(1.8, realmTier) + realmLevel * (25 + realmTier * 15));
+  return baseExp;
+}
+
+// ── 获取境界等级上限 ──
+export function getRealmLevelCap(realm: string): number {
+  return REALM_LEVEL_CAPS[realm] || 15;
 }
 
 // ── 计算突破所需等级 ──

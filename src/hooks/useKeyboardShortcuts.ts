@@ -34,7 +34,7 @@ function saveCommandToHistory(cmd: string) {
   }
 }
 
-export function useKeyboardShortcuts() {
+export function useKeyboardShortcuts(onToggleSettings?: () => void) {
   const {
     processCommand,
     openWindows,
@@ -140,20 +140,22 @@ export function useKeyboardShortcuts() {
     const key = e.key.toLowerCase();
     const ctrl = e.ctrlKey || e.metaKey;
     const shift = e.shiftKey;
+    const alt = e.altKey;
 
     const shortcuts: KeyboardShortcut[] = [
       { key: 'escape', action: closeTopWindow, description: '关闭当前窗口' },
       { key: 'tab', shift, action: toggleChatChannel, description: '切换聊天频道' },
-      { key: 'q', action: () => useSkill(0), description: '释放技能1' },
-      { key: 'w', action: () => useSkill(1), description: '释放技能2' },
-      { key: 'e', action: () => useSkill(2), description: '释放技能3' },
-      { key: 'r', action: () => useSkill(3), description: '释放技能4' },
+      { key: 'q', action: () => toggleWindow('tasks'), description: '打开任务面板' },
+      { key: '1', action: () => useSkill(0), description: '释放技能1' },
+      { key: '2', action: () => useSkill(1), description: '释放技能2' },
+      { key: '3', action: () => useSkill(2), description: '释放技能3' },
+      { key: '4', action: () => useSkill(3), description: '释放技能4' },
       { key: ' ', action: () => { if (combat.isInCombat) tickCombat(); }, description: '普通攻击/确认' },
-      { key: '1', action: () => useItem(0), description: '使用物品1' },
-      { key: '2', action: () => useItem(1), description: '使用物品2' },
-      { key: '3', action: () => useItem(2), description: '使用物品3' },
-      { key: '4', action: () => useItem(3), description: '使用物品4' },
-      { key: '5', action: () => useItem(4), description: '使用物品5' },
+      { key: '1', alt: true, action: () => useItem(0), description: '使用物品1' },
+      { key: '2', alt: true, action: () => useItem(1), description: '使用物品2' },
+      { key: '3', alt: true, action: () => useItem(2), description: '使用物品3' },
+      { key: '4', alt: true, action: () => useItem(3), description: '使用物品4' },
+      { key: '5', alt: true, action: () => useItem(4), description: '使用物品5' },
       { key: 'c', action: () => toggleWindow('combat'), description: '打开战斗面板' },
       { key: 's', action: () => toggleWindow('skills'), description: '打开技能面板' },
       { key: 'b', action: () => toggleWindow('bag'), description: '打开背包' },
@@ -163,6 +165,12 @@ export function useKeyboardShortcuts() {
       { key: 'p', action: () => toggleWindow('sect'), description: '打开门派面板' },
       { key: 'd', action: () => toggleWindow('dungeon'), description: '打开副本面板' },
       { key: 'o', action: () => toggleWindow('social'), description: '打开社交面板' },
+      { key: 'z', action: () => onToggleSettings?.(), description: '打开设置' },
+      { key: 'r', action: () => toggleWindow('rankings'), description: '打开排行榜' },
+      { key: 'k', action: () => toggleWindow('shop'), description: '打开商城' },
+      { key: 'x', action: () => toggleWindow('cultivation'), description: '打开修炼面板' },
+      { key: 'g', action: () => toggleWindow('guild'), description: '打开帮派面板' },
+      { key: 'y', action: () => toggleWindow('alchemy'), description: '打开炼丹面板' },
       { key: 'h', action: () => processCommand('help'), description: '显示帮助' },
       { key: 'enter', action: focusInput, description: '聚焦输入框' },
       { key: 'arrowup', action: () => cycleCommand(true), description: '上一个命令' },
@@ -175,14 +183,15 @@ export function useKeyboardShortcuts() {
       const matchKey = shortcut.key === key;
       const matchCtrl = shortcut.ctrl ? ctrl : true;
       const matchShift = shortcut.shift ? shift : true;
+      const matchAlt = shortcut.alt ? alt : true;
 
-      if (matchKey && matchCtrl && matchShift) {
+      if (matchKey && matchCtrl && matchShift && matchAlt) {
         e.preventDefault();
         shortcut.action();
         break;
       }
     }
-  }, [processCommand, openWindows, closeWindow, toggleWindow, combat, tickCombat, closeTopWindow, useSkill, useItem, focusInput, cycleCommand, toggleChatChannel]);
+  }, [processCommand, openWindows, closeWindow, toggleWindow, combat, tickCombat, closeTopWindow, useSkill, useItem, focusInput, cycleCommand, toggleChatChannel, onToggleSettings]);
 
   useEffect(() => {
     window.addEventListener('keydown', handleKeyDown);
@@ -195,20 +204,26 @@ export function useKeyboardShortcuts() {
 export const KEYBOARD_SHORTCUTS_HELP = [
   { key: 'ESC', description: '关闭当前窗口 / 打开社交' },
   { key: 'Enter', description: '聚焦输入框' },
-  { key: 'Q/W/E/R', description: '释放技能1-4(战斗中)' },
+  { key: '1-4', description: '释放技能1-4(战斗中)' },
   { key: 'Space', description: '普通攻击(战斗中)' },
-  { key: '1-5', description: '使用背包物品1-5' },
+  { key: 'Alt+1-5', description: '使用背包物品1-5' },
+  { key: 'Q / T', description: '任务面板' },
   { key: 'A', description: '属性面板' },
   { key: 'B / I', description: '背包' },
   { key: 'C', description: '战斗面板' },
   { key: 'D', description: '副本面板' },
   { key: 'H', description: '显示帮助' },
+  { key: 'K', description: '商城' },
   { key: 'L', description: '查看当前场景' },
   { key: 'M', description: '地图' },
   { key: 'O', description: '社交面板' },
   { key: 'P', description: '门派面板' },
+  { key: 'R', description: '排行榜' },
   { key: 'S', description: '技能面板' },
-  { key: 'T', description: '任务面板' },
+  { key: 'Z', description: '设置' },
+  { key: 'X', description: '修炼面板' },
+  { key: 'G', description: '帮派面板' },
+  { key: 'Y', description: '炼丹面板' },
   { key: 'Tab', description: '切换聊天频道' },
   { key: '↑/↓', description: '切换历史命令' },
 ];

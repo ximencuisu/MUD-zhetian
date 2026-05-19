@@ -27,7 +27,7 @@
   background: linear-gradient(180deg, rgba(5, 15, 8, 0.95) 0%, rgba(3, 10, 5, 0.9) 100%);
   border-bottom: 1px solid var(--border, #1a4a20);
   padding: 8px 14px 6px;
-  max-height: 42vh;
+  max-height: 25vh;
   overflow-y: auto;
 }
 
@@ -38,7 +38,10 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 4px;
+  background: rgba(100, 100, 100, 0.2);
+  padding: 6px 14px;
+  margin: -8px -14px 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .room-bar-name {
@@ -78,6 +81,11 @@
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
 }
+.room-zone-tag {
+  color: #ffaa00;
+  font-weight: bold;
+  margin-right: 4px;
+}
 
 /* ── Compass Grid ── */
 .compass-grid {
@@ -96,8 +104,9 @@
 }
 
 .compass-cell {
-  width: 36px;
-  height: 30px;
+  width: auto;
+  min-width: 60px;
+  height: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -179,25 +188,46 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 24px;
-  font-size: 11px;
+  width: auto;
+  min-width: 60px;
+  height: 20px;
+  font-size: 10px;
   font-family: var(--font-cn);
-  background: rgba(0, 80, 30, 0.2);
-  border: 1px solid rgba(40, 120, 60, 0.4);
-  color: var(--green-dim, #00cc33);
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #e0e0e0;
   cursor: pointer;
   border-radius: 3px;
   transition: all 0.15s ease;
   text-decoration: none;
   line-height: 1;
+  padding: 0 6px;
+  white-space: nowrap;
 }
 .compass-exit-btn:hover {
-  background: rgba(0, 120, 40, 0.3);
-  border-color: var(--border-bright, #2a7a30);
-  color: var(--green, #00ff41);
-  box-shadow: 0 0 8px rgba(0, 255, 65, 0.15);
-  transform: scale(1.1);
+  background: rgba(40, 40, 40, 0.8);
+  border-color: rgba(255, 255, 255, 0.4);
+  color: #ffffff;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.15);
+  transform: scale(1.05);
+}
+
+.map-box.current {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  min-width: 60px;
+  height: 20px;
+  font-size: 10px;
+  font-family: var(--font-cn);
+  background: rgba(100, 100, 100, 0.3);
+  border: 1px solid #ffd700;
+  color: #ffd700;
+  border-radius: 3px;
+  white-space: nowrap;
+  padding: 0 6px;
+  font-weight: bold;
 }
 .compass-exit-btn:active {
   transform: scale(0.95);
@@ -478,27 +508,54 @@
 }
 
 .qa-btn {
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: rgba(5, 15, 8, 0.85);
-  border: 1px solid rgba(40, 100, 50, 0.4);
-  border-radius: 6px;
-  color: var(--text-dim, #338844);
-  font-size: 16px;
+  background: rgba(60, 60, 60, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  color: #e0e0e0;
   cursor: pointer;
   transition: all 0.15s ease;
   backdrop-filter: blur(4px);
   position: relative;
+  gap: 1px;
 }
 .qa-btn:hover {
-  background: rgba(10, 30, 15, 0.9);
-  border-color: var(--border-bright, #2a7a30);
-  color: var(--green, #00ff41);
-  box-shadow: 0 0 12px rgba(0, 255, 65, 0.15);
-  transform: scale(1.1);
+  background: rgba(80, 80, 80, 0.9);
+  border-color: rgba(255, 255, 255, 0.4);
+  color: #ffffff;
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.2);
+  transform: scale(1.05);
+}
+.qa-icon {
+  font-size: 14px;
+}
+.qa-text {
+  font-size: 10px;
+  font-family: var(--font-cn);
+  font-weight: bold;
+}
+.qa-shortcut {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  font-size: 9px;
+  font-weight: bold;
+  color: rgba(255, 255, 255, 0.7);
+  background: rgba(40, 40, 40, 0.9);
+  border-radius: 50%;
+  width: 14px;
+  height: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+  pointer-events: none;
 }
 .qa-btn:active {
   transform: scale(0.95);

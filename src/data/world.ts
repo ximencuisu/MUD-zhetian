@@ -150,7 +150,7 @@ export const ROOMS: Record<string, Room> = {
 
   guiyuan_village: {
     id: 'guiyuan_village',
-    name: '归元村·村口',
+    name: '村口',
     description:
       '东荒南域深处一座宁静的小村庄，名曰归元村，是无数修炼者踏上大道的起点。村口立着一块古朴石碑，上书"道可道，非常道"。引路老人守在村口，专门迎接初入修炼界的新人。村中炊烟袅袅，偶有孩童追逐嬉戏，一派安宁祥和。',
     exits: [
@@ -168,7 +168,7 @@ export const ROOMS: Record<string, Room> = {
 
   guiyuan_square: {
     id: 'guiyuan_square',
-    name: '归元村·中央广场',
+    name: '中央广场',
     description:
       '村庄中心的开阔广场，铺着青石板，中间有一口古井，井水清澈甘甜，据说饮之可安神定气。广场四周挂着各式告示，记录着村中大事、任务与外界消息。偶尔有修炼者在此盘膝而坐，感悟天地源力的流动。广场北侧可见一座简朴的宗祠。',
     exits: [
@@ -185,7 +185,7 @@ export const ROOMS: Record<string, Room> = {
 
   guiyuan_ancestral_hall: {
     id: 'guiyuan_ancestral_hall',
-    name: '归元村·宗祠',
+    name: '宗祠',
     description:
       '归元村历代先祖的牌位供奉于此，香烟缭绕，庄严肃穆。宗祠内有一位年迈的修炼导师，专门为初入修炼界的新人传授基本功法与心得。墙上挂着一幅《东荒南域全图》，详细标注了各处要地。窗外微风轻抚，送来清新的草木气息。',
     exits: [
@@ -200,7 +200,7 @@ export const ROOMS: Record<string, Room> = {
 
   guiyuan_training_ground: {
     id: 'guiyuan_training_ground',
-    name: '归元村·演武场',
+    name: '演武场',
     description:
       '村中供修炼者切磋演练的场地，地面留有各种交手痕迹，木桩上绑满了草靶。一位年轻武师在此指导村民练习基本拳脚功夫。演武场旁有兵器架，陈列着一些普通刀剑，供人取用练习。空气中弥漫着淡淡的血气与汗水的味道，这里见证了无数人踏上修炼之路的第一步。',
     exits: [
@@ -216,7 +216,7 @@ export const ROOMS: Record<string, Room> = {
 
   guiyuan_blacksmith: {
     id: 'guiyuan_blacksmith',
-    name: '归元村·铁匠铺',
+    name: '铁匠铺',
     description:
       '铁锤叮当之声不绝于耳，炉火熊熊燃烧，将整间铺子映得通红。铁匠老关是归元村最受欢迎的手艺人，打制的法器虽谈不上顶级，却结实耐用，适合初学者使用。铺子里挂满了各式工具和武器，墙角堆放着各种矿石原料。',
     exits: [
@@ -231,7 +231,7 @@ export const ROOMS: Record<string, Room> = {
 
   guiyuan_medical_hall: {
     id: 'guiyuan_medical_hall',
-    name: '归元村·草药医馆',
+    name: '草药医馆',
     description:
       '医馆内草药清香扑鼻，架上摆满了各式瓶瓶罐罐。坐诊的大夫是位白发老妪，人称"药婆"，精通草药之道，常年为村民免费诊治。她也兼售一些基础丹药，价格公道，是新人补给的最佳去处。壁上挂着一幅《本草图鉴》，记录了东荒常见灵药的特征与效用。',
     exits: [
@@ -247,7 +247,7 @@ export const ROOMS: Record<string, Room> = {
 
   guiyuan_herb_garden: {
     id: 'guiyuan_herb_garden',
-    name: '归元村·药圃',
+    name: '药圃',
     description:
       '医馆后方的草药种植园，种植着数十种常见灵药。一排排整齐的药畦延伸至远处，嫩绿的草叶上还挂着晨露。偶尔有蝴蝶飞过，留下一缕清香。药圃旁有一处清泉，泉水中含有微量源力，是天然的灵水，据说用于浇灌灵药效果极佳，修炼者喝了也能神清气爽。',
     exits: [
@@ -262,7 +262,7 @@ export const ROOMS: Record<string, Room> = {
 
   guiyuan_grocery: {
     id: 'guiyuan_grocery',
-    name: '归元村·杂货铺',
+    name: '杂货铺',
     description:
       '归元村最热闹的商铺，店主王婶是个爽朗的中年妇人，经营着从生活用品到基本修炼材料的各类杂货。货架上琳琅满目，从普通草药到简单的修炼材料应有尽有，价格亲民，是新人采购的首选。店内常有修炼者聚集聊天，交流各类消息。',
     exits: [
@@ -278,7 +278,7 @@ export const ROOMS: Record<string, Room> = {
 
   guiyuan_inn: {
     id: 'guiyuan_inn',
-    name: '归元村·归元客栈',
+    name: '归元客栈',
     description:
       '村中唯一的客栈，名为"归元"，取归根复命之意。客栈内部布置简朴却温馨，修炼者可在此休息恢复，也可与来自各地的过路人交流见闻。掌柜是个中年男人，见多识广，手边常备一壶好茶，总愿意和客人侃上几句东荒的奇闻异事。',
     exits: [
@@ -294,7 +294,7 @@ export const ROOMS: Record<string, Room> = {
 
   guiyuan_teahouse: {
     id: 'guiyuan_teahouse',
-    name: '归元村·天地茶室',
+    name: '天地茶室',
     description:
       '客栈顶楼的雅室，推窗可见连绵山脉与茫茫平原，景色开阔。茶室内飘着淡淡的灵茶香气，据说用天泉水泡制，能安神定志，辅助修炼。一位颇有来历的说书先生常驻于此，为往来之人讲述东荒历史与遮天世界的传奇人物，口才极佳，令听者如身临其境。',
     exits: [
@@ -308,7 +308,7 @@ export const ROOMS: Record<string, Room> = {
 
   guiyuan_east_road: {
     id: 'guiyuan_east_road',
-    name: '归元村·村东小路',
+    name: '村东小路',
     description:
       '连接归元村与外界的主要道路，路边种植着高大的古树，枝叶茂盛，为行人遮挡风雨。小路延伸向东，隐约可见远处的修炼者在赶路。路旁有一块刻满文字的界碑，标注着归元村安全范围的边界。老猎人常在此处坐守，向来人介绍外界的危险与注意事项。',
     exits: [
@@ -325,7 +325,7 @@ export const ROOMS: Record<string, Room> = {
 
   guiyuan_west_field: {
     id: 'guiyuan_west_field',
-    name: '归元村·西侧田野',
+    name: '西侧田野',
     description:
       '归元村西边的一片宽阔田野，微风吹过，绿浪翻涌。远处有几位村民在耕作，偶尔抬头望向天空，神色安然。田野边缘有一棵数百年的大槐树，树荫浓密，常有老人在树下打坐调息。据说这棵槐树根植于一处天然灵脉之上，在树下修炼效果比平常更佳。',
     exits: [
@@ -341,7 +341,7 @@ export const ROOMS: Record<string, Room> = {
 
   guiyuan_ferry: {
     id: 'guiyuan_ferry',
-    name: '归元村·归元渡口',
+    name: '归元渡口',
     description:
       '村南的一处渡口，清澈的溪流在此缓缓流淌，水面倒映着天光云影。一艘古朴的木船停在岸边，船夫是个头戴斗笠的老人，据说在此摆渡已有数十年。渡口旁有一面石壁，布满了历代过客的题刻留言，记录着无数修炼者离开归元村、踏上征途时的感慨。',
     exits: [
@@ -356,7 +356,7 @@ export const ROOMS: Record<string, Room> = {
 
   guiyuan_south_pavilion: {
     id: 'guiyuan_south_pavilion',
-    name: '归元村·送别亭',
+    name: '送别亭',
     description:
       '渡口东岸矗立着一座六角凉亭，名曰"送别亭"，是历来修炼者辞别师友、踏入东荒之前的最后一处安歇之所。亭中有石桌石凳，桌上常置一壶免费的茶水，供行人歇脚。亭柱上刻着前人留下的诗句："归元一别路漫漫，此去东荒莫回头。"亭外即是荒野，可隐约看见东荒南域的苍茫大地向远处延伸。',
     exits: [
@@ -372,7 +372,7 @@ export const ROOMS: Record<string, Room> = {
   // 新手练功区：村外野外（低危险）
   village_training_ground: {
     id: 'village_training_ground',
-    name: '村外·练功场',
+    name: '练功场',
     description:
       '归元村东北方向的野外空地，是新修炼者理想的练功场所。这里栖息着一些温顺的小型妖兽，虽然具有攻击性但实力不强，非常适合初入修炼界的新人练手。空地上有几块被击碎的大石，显然曾有修炼者在此练功。',
     exits: [
@@ -387,7 +387,7 @@ export const ROOMS: Record<string, Room> = {
   // 起始区域：太玄门外围（原第一个区域，现作为进阶区）
   donghuang_plain: {
     id: 'donghuang_plain',
-    name: '东荒南域·旷野',
+    name: '旷野',
     description:
       '东荒大地，天地磅礴。眼前是一片苍茫旷野，远处隐约可见太玄山脉的轮廓。脚下的土地散发着浓郁的天地源力，修炼者踏上此地便能感受到源力涌动。天边有几只妖鸟盘旋，羽翼张开时遮天蔽日。',
     exits: [
@@ -404,7 +404,7 @@ export const ROOMS: Record<string, Room> = {
 
   taixuan_gate: {
     id: 'taixuan_gate',
-    name: '太玄门·山门',
+    name: '山门',
     description:
       '巍峨的山门矗立于此，门上"太玄"二字苍劲有力。山门两侧守卫的弟子身着灰色道袍，目光如电。远处山峰云雾缭绕，隐约传来风字秘的呼啸之声，速度之快令人难以置信。这里是太玄门的大本营，行字秘的发源地。',
     exits: [
@@ -420,7 +420,7 @@ export const ROOMS: Record<string, Room> = {
 
   taixuan_inner: {
     id: 'taixuan_inner',
-    name: '太玄门·内院',
+    name: '内院',
     description:
       '内院是太玄门真正传授行字秘之处。院中有几位弟子以超凡之速演练步法，身影残影叠叠，如闪电穿梭。一位面容清矍的长老端坐于石台之上，闭目运功，身周隐有流光萦绕。',
     exits: [
@@ -449,7 +449,7 @@ export const ROOMS: Record<string, Room> = {
 
   market_town: {
     id: 'market_town',
-    name: '东荒集镇·源石坊',
+    name: '源石坊',
     description:
       '东荒南域唯一的大型集散地，各地修炼者汇聚于此交流，买卖源石、丹药、法宝。街道两旁的摊位鳞次栉比，有人高声叫卖，有人低头鉴别源石。偶尔传来的爆鸣声是有人当场切割源石，引得周围一阵叫好。',
     exits: [
@@ -466,7 +466,7 @@ export const ROOMS: Record<string, Room> = {
 
   ancient_forest: {
     id: 'ancient_forest',
-    name: '上古神木林·深处',
+    name: '神木深处',
     description:
       '这片古林存在了数万年，树木高耸入云，遮天蔽日。林中积聚着大量的天地精华，吸引了众多妖兽栖居。时常有修炼者在此历练，但也时常有人一去不返。林中深处据说有一株九转仙草，众多强者争夺。',
     exits: [
@@ -482,7 +482,7 @@ export const ROOMS: Record<string, Room> = {
 
   ancient_forest_edge: {
     id: 'ancient_forest_edge',
-    name: '上古神木林·边缘',
+    name: '神木边缘',
     description:
       '神木林的边缘地带，时常有胆大的年轻修炼者在此附近历练。林边有几株千年古树，树身周围有淡淡的光芒流动，那是天地精华积聚的表现。几只小妖兽在草丛中打闹嬉戏，并不害怕人类。',
     exits: [
@@ -498,7 +498,7 @@ export const ROOMS: Record<string, Room> = {
 
   source_mine: {
     id: 'source_mine',
-    name: '源石矿·外围',
+    name: '源矿外围',
     description:
       '此地地表裸露着大量源石，是东荒南域著名的矿脉所在。每日都有无数修炼者和采矿者在此劳作。偶尔深挖下去，会发现品质极佳的源晶，甚至有人在此挖出过蕴含古生物的绝世源石。矿道四通八达，通向更深处。',
     exits: [
@@ -514,7 +514,7 @@ export const ROOMS: Record<string, Room> = {
 
   source_mine_deep: {
     id: 'source_mine_deep',
-    name: '源石矿·深层矿道',
+    name: '深层矿道',
     description:
       '矿道延伸向地下深处，四壁嵌满了品质不一的源石，散发着微弱的光芒。越往深处，天地源力越浓郁，但也越危险。有些修炼者在此遭遇了地下妖兽的袭击，尸骨至今仍留在矿道中。',
     exits: [
@@ -528,7 +528,7 @@ export const ROOMS: Record<string, Room> = {
 
   desolate_ruins: {
     id: 'desolate_ruins',
-    name: '荒古遗迹·外围',
+    name: '遗迹外围',
     description:
       '不知何年留下的古代遗迹，断壁残垣之中还留有古代文字。此处曾是一个繁荣的古代王朝，后来在一场惊天大战中覆灭。遗迹中偶有强者的印记留存，每逢特定时机会浮现出来。',
     exits: [
@@ -543,7 +543,7 @@ export const ROOMS: Record<string, Room> = {
 
   ancient_emperor_tomb: {
     id: 'ancient_emperor_tomb',
-    name: '古帝陵·外围',
+    name: '帝陵外围',
     description:
       '上古帝王的陵寝，外围已有无数盗墓者光顾，但内部的封印依然完好。陵寝外围弥漫着死气，偶尔有古代强者残留的战斗意志在虚空中显化，令弱者肝胆俱裂。据说段德曾多次光顾此地。',
     exits: [
@@ -557,7 +557,7 @@ export const ROOMS: Record<string, Room> = {
 
   yaoguan_road: {
     id: 'yaoguan_road',
-    name: '摇光圣地·山道',
+    name: '圣地山道',
     description:
       '通往摇光圣地的山道，两侧是高耸入云的山峰，路途险峻。山道上不时有圣地弟子巡逻，外人轻易不得进入。云雾中隐约可见圣地建筑的金顶，散发着神圣的光芒。道路旁有石碑，上书"摇光圣地，外人止步"。',
     exits: [
@@ -572,7 +572,7 @@ export const ROOMS: Record<string, Room> = {
 
   yaoguan_outer: {
     id: 'yaoguan_outer',
-    name: '摇光圣地·外围广场',
+    name: '圣地广场',
     description:
       '摇光圣地外围的宏大广场，以白玉铺就，洁白如雪。圣地弟子在此修炼，个个气度不凡，散发着强大的气息。广场中央有一棵参天神木，据说是圣地开创之时即已存在，树龄已逾万年。',
     exits: [
@@ -587,7 +587,7 @@ export const ROOMS: Record<string, Room> = {
 
   forbidden_zone_ruins: {
     id: 'forbidden_zone_ruins',
-    name: '太初古矿·外围',
+    name: '古矿外围',
     description:
       '七大生命禁区之一——太初古矿的外围区域。此地弥漫着怪异的气息，连天地源力都显得扭曲异常。强大的存在在矿中沉睡，轻易激怒它们可能引来灭顶之灾。许多圣体修炼者专程来此寻找淬炼肉身的神材。',
     exits: [
@@ -605,7 +605,7 @@ export const ROOMS: Record<string, Room> = {
   // ──────────────────────────────────────────────
   central_city_entrance: {
     id: 'central_city_entrance',
-    name: '中州神城·南门',
+    name: '神城南门',
     description: '中州神城是东荒最繁华的城池，城墙高耸入云，以神金铸就，散发着不朽的光芒。南门处人来人往，各色商旅、修炼者络绎不绝。城门口有卫兵把守，严格检查进出者的身份。',
     exits: [
       { direction: 'north', roomId: 'central_city_square', label: '北(中央广场)' },
@@ -619,7 +619,7 @@ export const ROOMS: Record<string, Room> = {
 
   central_city_square: {
     id: 'central_city_square',
-    name: '中州神城·中央广场',
+    name: '神城广场',
     description: '神城的核心区域，一座巨大的喷泉矗立于广场中央，泉水呈现出淡淡的金色，据说是用源液浇灌而成。广场四周店铺林立，各大宗门的产业在此都能找到。远处可见拍卖行、竞技场、交易所等重要建筑。',
     exits: [
       { direction: 'south', roomId: 'central_city_entrance', label: '南(南门)' },
@@ -636,7 +636,7 @@ export const ROOMS: Record<string, Room> = {
 
   central_city_market: {
     id: 'central_city_market',
-    name: '中州神城·交易所',
+    name: '交易所',
     description: '三楼是神城最热闹的交易所，无数商人在此叫卖，各类珍稀物品应有尽有。从基础丹药到顶级功法，从普通装备到圣兵碎片，只要出得起价，没有买不到的东西。交易所中央有一块巨大的公示板，实时更新着各类物品的成交价格。',
     exits: [
       { direction: 'down', roomId: 'central_city_square', label: '下(广场)' },
@@ -649,7 +649,7 @@ export const ROOMS: Record<string, Room> = {
 
   central_city_auction: {
     id: 'central_city_auction',
-    name: '中州神城·拍卖行',
+    name: '拍卖行',
     description: '神城最大的拍卖行，每日举办小型拍卖会，定期举办大型拍卖盛会。内部装饰奢华，以神玉铺地，以源晶为灯。拍卖师是位绝代佳人，声音能传遍整个大厅，据说她的声音本身也蕴含着某种魅惑之力。',
     exits: [
       { direction: 'east', roomId: 'central_city_square', label: '东(广场)' },
@@ -662,7 +662,7 @@ export const ROOMS: Record<string, Room> = {
 
   central_city_arena: {
     id: 'central_city_arena',
-    name: '中州神城·竞技场',
+    name: '竞技场',
     description: '神城最热血沸腾的地方，一座巨大的圆形竞技场矗立于此。竞技场四周设有看台，可容纳十万观众。每逢比赛日，各路高手在此对决，胜者可获得丰厚奖励和赫赫威名。场中央的沙地上，还残留着历代强者的战斗痕迹。',
     exits: [
       { direction: 'west', roomId: 'central_city_square', label: '西(广场)' },
@@ -675,7 +675,7 @@ export const ROOMS: Record<string, Room> = {
 
   central_city_temple: {
     id: 'central_city_temple',
-    name: '中州神城·城主府',
+    name: '城主府',
     description: '城主府是神城最高的建筑，俯瞰全城。府内供奉着历代城主的神像，他们都是东荒赫赫有名的强者。城主府也是发布大型悬赏任务的地方，完成了这些任务，不仅能获得丰厚奖励，还能获得神城的官方认可。',
     exits: [
       { direction: 'south', roomId: 'central_city_square', label: '南(广场)' },
@@ -691,7 +691,7 @@ export const ROOMS: Record<string, Room> = {
   // ──────────────────────────────────────────────
   demon_beast_mountain_entrance: {
     id: 'demon_beast_mountain_entrance',
-    name: '天妖山脉·山脚',
+    name: '妖山山脚',
     description: '天妖山脉横亘于东荒中部，山势险峻，常年云雾缭绕。此地是妖族聚集之地，无数妖兽在此繁衍生息。修炼者来此历练需格外小心，但若能活着回去，实力必有长进。山脚下有一座妖界集市，妖与人在此交易，颇为奇特。',
     exits: [
       { direction: 'north', roomId: 'demon_beast_mountain_trail', label: '北(山道)' },
@@ -705,7 +705,7 @@ export const ROOMS: Record<string, Room> = {
 
   demon_beast_mountain_trail: {
     id: 'demon_beast_mountain_trail',
-    name: '天妖山脉·蜿蜒山道',
+    name: '蜿蜒山道',
     description: '山道蜿蜒曲折，两侧是茂密的古林，不时有妖兽的嚎叫声传来。林间古树上盘踞着各色妖禽，时不时俯冲下来袭击路人。据说山中深处藏有上古妖帝的遗迹，无数强者为此趋之若鹜。',
     exits: [
       { direction: 'south', roomId: 'demon_beast_mountain_entrance', label: '南(山脚)' },
@@ -720,7 +720,7 @@ export const ROOMS: Record<string, Room> = {
 
   demon_beast_cavern_entrance: {
     id: 'demon_beast_cavern_entrance',
-    name: '妖王洞穴·入口',
+    name: '洞穴入口',
     description: '一座巨大的天然洞穴，洞口刻满了妖文，散发着恐怖的气息。洞穴深处盘踞着一位千年妖王，以山脉中的天地精华滋养自身。无数挑战者进入洞穴，能活着出来的寥寥无几。',
     exits: [
       { direction: 'west', roomId: 'demon_beast_mountain_trail', label: '西(山道)' },
@@ -734,7 +734,7 @@ export const ROOMS: Record<string, Room> = {
 
   demon_beast_cavern_depths: {
     id: 'demon_beast_cavern_depths',
-    name: '妖王洞穴·深处',
+    name: '洞穴深处',
     description: '洞穴越往深处越宽阔，岩壁上镶嵌着散发幽光的源晶。空气中弥漫着浓郁的妖气，令人窒息。洞穴最深处，一只巨大的熊妖盘踞于此，它的身躯堪比小山，眼中闪烁着智慧的光芒。',
     exits: [
       { direction: 'south', roomId: 'demon_beast_cavern_entrance', label: '南(洞穴入口)' },
@@ -747,7 +747,7 @@ export const ROOMS: Record<string, Room> = {
 
   demon_beast_mountain_depths: {
     id: 'demon_beast_mountain_depths',
-    name: '天妖山脉·核心区域',
+    name: '妖山核心',
     description: '山脉最深处，天地源力浓郁得几乎凝成实质。此地的妖兽都是远古异种，实力惊人。据说山脉深处藏有一处上古妖帝的道场，无数强者来此探险，希望能获得妖帝传承。',
     exits: [
       { direction: 'south', roomId: 'demon_beast_mountain_trail', label: '南(山道)' },
@@ -761,7 +761,7 @@ export const ROOMS: Record<string, Room> = {
 
   demon_emperor_site: {
     id: 'demon_emperor_site',
-    name: '妖帝遗迹·外围',
+    name: '妖帝遗迹',
     description: '上古妖帝的道场遗址，散发着亘古的气息。虽已荒废多年，但残留的阵法依然强大，阻挡着一切入侵者。遗迹中偶有强者留下的感悟，对修炼妖道功法的修炼者大有裨益。',
     exits: [
       { direction: 'south', roomId: 'demon_beast_mountain_depths', label: '南(核心区域)' },
@@ -777,7 +777,7 @@ export const ROOMS: Record<string, Room> = {
   // ──────────────────────────────────────────────
   ancient_emperor_battlefield_entrance: {
     id: 'ancient_emperor_battlefield_entrance',
-    name: '古皇战场·外围',
+    name: '战场外围',
     description: '古皇战场是遮天世界最神秘的地方之一，传说这里埋葬着数位古皇的残躯。战场上空乌云密布，电闪雷鸣，残留的战斗意志在虚空中激荡。无数强者来此寻觅古皇传承，但大多葬身于此。',
     exits: [
       { direction: 'north', roomId: 'ancient_emperor_battlefield_core', label: '北(战场核心)' },
@@ -791,7 +791,7 @@ export const ROOMS: Record<string, Room> = {
 
   ancient_emperor_battlefield_core: {
     id: 'ancient_emperor_battlefield_core',
-    name: '古皇战场·核心区域',
+    name: '战场核心',
     description: '战场最深处，古皇的残躯散发出镇压天地的威压。这里的天地规则都已扭曲，弱者根本无法生存。偶尔能见到古皇生前留下的战斗痕迹，每一道痕迹都蕴含着毁天灭地的力量。',
     exits: [
       { direction: 'south', roomId: 'ancient_emperor_battlefield_entrance', label: '南(外围)' },
@@ -805,7 +805,7 @@ export const ROOMS: Record<string, Room> = {
 
   emperor_remains_shrine: {
     id: 'emperor_remains_shrine',
-    name: '古皇陵寝·神殿',
+    name: '陵寝神殿',
     description: '古皇陨落后，残躯化为一座神殿，散发着永恒不朽的气息。神殿中供奉着古皇的遗物和传承，每隔万年会有一次显化，能有缘获得传承者，必将成为新一代的绝顶强者。',
     exits: [
       { direction: 'south', roomId: 'ancient_emperor_battlefield_core', label: '南(战场核心)' },
